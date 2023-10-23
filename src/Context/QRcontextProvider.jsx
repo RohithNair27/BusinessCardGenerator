@@ -5,10 +5,7 @@ const QRcontextProvider = ({children}) => {
   const [usersAdded, setUsersAdded] = useState([]);
 
   const addUsers = data => {
-    // console.log(data);
     setUsersAdded([...usersAdded, data]);
-    // setUsersAdded([...usersAdded, data]);
-    console.log(usersAdded);
   };
   return (
     <userContext.Provider value={{addUsers, usersAdded}}>

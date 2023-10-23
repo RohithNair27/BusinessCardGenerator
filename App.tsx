@@ -17,7 +17,7 @@ function App(): JSX.Element {
   return (
     <QRcontextProvider>
       <SafeAreaView style={styles.body}>
-        <StatusBar backgroundColor={'#f2f1f6'} />
+        <StatusBar backgroundColor={'#ffe9ec'} />
         <NavigationContainer>
           <TabNavigator />
         </NavigationContainer>
@@ -29,8 +29,6 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#f2f1f6',
-    // borderWidth: 10,
   },
 });
 

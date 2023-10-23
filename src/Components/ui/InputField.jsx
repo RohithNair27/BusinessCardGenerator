@@ -20,14 +20,10 @@ export default InputField;
 const styles = StyleSheet.create({
   inputBody: {
     width: '100%',
-    marginVertical: '2%',
 
-    // borderWidth: 1,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: 'lightgray',
-    height: '8%',
+    height: '100%',
+    // backgroundColor: 'white',
+
     paddingLeft: 10,
   },
 });

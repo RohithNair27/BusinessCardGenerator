@@ -23,6 +23,7 @@ const List = () => {
   //QR visisble on modal change
   const dataForQRCreation = () => {
     const qrData = JSON.stringify(currentUser);
+    console.log(qrData);
     return (
       <PopupModal
         visible={modalVisible}
