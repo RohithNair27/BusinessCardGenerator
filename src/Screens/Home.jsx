@@ -1,9 +1,11 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
-import React, {useState} from 'react';
+import {StyleSheet, Text, View, Image, StatusBar} from 'react-native';
+import React, {useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import PopupModal from '../Components/PopupModal';
+import {userContext} from '../Context/QRdataContext';
 const Home = () => {
+  const {addUsers, usersAdded} = useContext(userContext);
   const [modalVisible, SetModalVisible] = useState(false);
   const [personData, setPersonData] = useState({
     name: {title: 'Name', value: ''},
@@ -18,15 +20,35 @@ const Home = () => {
   const onPressQrButton = () => {
     SetModalVisible(!modalVisible);
   };
-  const onChangeName = data => {
-    setPersonData({...personData,[name.value] = data});
+
+  //This code handles the change in input values and adds it to personData
+  const handleInputChange = (key, text) => {
+    setPersonData({
+      ...personData,
+      [key]: {...personData[key], value: text},
+    });
   };
 
-  const dataForQRCreation = () => {};
+  //QR visisble on modal change
+  const dataForQRCreation = () => {
+    const qrData = JSON.stringify(personData);
+    return (
+      <PopupModal
+        visible={modalVisible}
+        onPress={onPressQrButton}
+        value={qrData}
+      />
+    );
+  };
+  const onSaveUser = () => {
+    addUsers(personData);
+  };
 
   return (
     <View style={styles.body}>
-      <PopupModal visible={modalVisible} onPress={onPressQrButton} />
+      <StatusBar backgroundColor={'#f2f1f6'} />
+      {dataForQRCreation()}
+
       <View style={styles.topFields}>
         <Text style={styles.headerText}>Business Card</Text>
 
@@ -42,16 +64,18 @@ const Home = () => {
         />
       </View>
       <View style={styles.inputField}>
-        <InputField
-          placeHolder={personData.name.title}
-          onValueChange={onChangeName}
-          value={personData.name.value}
-        />
-        <InputField placeHolder={personData.number.title} />
-        <InputField placeHolder={personData.company_name.title} />
-        <InputField placeHolder={personData.Email.title} />
-        <InputField placeHolder={personData.website.title} />
-        <InputField placeHolder={personData.city.title} />
+        {Object.keys(personData).map(keys => {
+          return (
+            <InputField
+              key={keys}
+              keyProps={keys}
+              placeHolder={personData[keys].title}
+              value={personData[keys].value}
+              onValueChange={handleInputChange}
+            />
+          );
+        })}
+
         <View
           style={{
             ...styles.inputField,
@@ -71,6 +95,7 @@ const Home = () => {
             placeHolder="Save"
             width={'30%'}
             backGroundColor={'#d95e54'}
+            onPress={onSaveUser}
           />
         </View>
       </View>

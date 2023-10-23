@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import Modal from 'react-native-modal';
 import QRcode from './ui/QRcode';
-const PopupModal = ({children, visible, onPress}) => {
+const PopupModal = ({children, visible, onPress, value}) => {
   return (
     <Modal visible={visible} animationType="slide">
       <View style={styles.modalBody}>
@@ -27,7 +27,7 @@ const PopupModal = ({children, visible, onPress}) => {
           </TouchableOpacity>
         </View>
         <View style={{justifyContent: 'center', flex: 1}}>
-          <QRcode />
+          <QRcode value={value} />
         </View>
       </View>
     </Modal>

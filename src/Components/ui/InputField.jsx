@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import React from 'react';
 
-const InputField = ({placeHolder, onValueChange, value}) => {
+const InputField = ({placeHolder, onValueChange, value, keyProps}) => {
   return (
     <View style={styles.inputBody}>
       <TextInput
@@ -9,7 +9,7 @@ const InputField = ({placeHolder, onValueChange, value}) => {
         placeholderTextColor={'lightgray'}
         style={{color: 'black', fontWeight: '600'}}
         value={value}
-        onChangeText={onValueChange}
+        onChangeText={text => onValueChange(keyProps, text)}
       />
     </View>
   );

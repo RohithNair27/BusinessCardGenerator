@@ -12,14 +12,17 @@ import {
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import TabNavigator from './src/Navigation/TabNavigation';
+import QRcontextProvider from './src/Context/QRcontextProvider';
 function App(): JSX.Element {
   return (
-    <SafeAreaView style={styles.body}>
-      <StatusBar backgroundColor={'#f2f1f6'} />
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
-    </SafeAreaView>
+    <QRcontextProvider>
+      <SafeAreaView style={styles.body}>
+        <StatusBar backgroundColor={'#f2f1f6'} />
+        <NavigationContainer>
+          <TabNavigator />
+        </NavigationContainer>
+      </SafeAreaView>
+    </QRcontextProvider>
   );
 }
 
