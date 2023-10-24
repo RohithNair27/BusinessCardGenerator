@@ -36,6 +36,7 @@ const Home = () => {
       ...personData,
       [key]: {...personData[key], value: text},
     });
+    SetQrVisible(false);
   };
 
   //QR visisble on modal change
@@ -97,7 +98,6 @@ const Home = () => {
               </View>
             );
           })}
-
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   buttonContainer: {
+    // borderWidth: 1,
     flexDirection: 'row',
     marginTop: '5%',
     width: '100%',

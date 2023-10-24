@@ -1,8 +1,8 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import QRCode from 'react-native-qrcode-svg';
-const QRcode = ({value}) => {
-  return <QRCode size={100} value={value} />;
+const QRcode = ({value, size}) => {
+  return <QRCode size={size} value={value} />;
 };
 
 export default QRcode;

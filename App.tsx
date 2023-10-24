@@ -15,14 +15,14 @@ import TabNavigator from './src/Navigation/TabNavigation';
 import QRcontextProvider from './src/Context/QRcontextProvider';
 function App(): JSX.Element {
   return (
-    <QRcontextProvider>
-      <SafeAreaView style={styles.body}>
-        <StatusBar backgroundColor={'#ffe9ec'} />
+    <SafeAreaView style={styles.body}>
+      <StatusBar backgroundColor={'#ffe9ec'} />
+      <QRcontextProvider>
         <NavigationContainer>
           <TabNavigator />
         </NavigationContainer>
-      </SafeAreaView>
-    </QRcontextProvider>
+      </QRcontextProvider>
+    </SafeAreaView>
   );
 }
 

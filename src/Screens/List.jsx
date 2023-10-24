@@ -29,6 +29,7 @@ const List = () => {
         visible={modalVisible}
         onPress={onPressQrButton}
         value={qrData}
+        size={200}
       />
     );
   };
@@ -46,7 +47,7 @@ const List = () => {
             <Image
               source={require('../Assets/Images/image2.png')}
               resizeMode="contain"
-              style={{height: '100%', width: '100%'}}
+              style={{height: '100%', width: '40%'}}
             />
           </TouchableOpacity>
         );
@@ -61,14 +62,17 @@ const WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+    backgroundColor: '#ffe9ec',
+    padding: 15,
   },
   buttonBody: {
     borderBottomWidth: 1,
     flex: 1,
-    width: WIDTH,
+    // width: WIDTH,
     height: HEIGHT * 0.1,
     borderBottomColor: 'lightgray',
-    // alignItems: 'center',
-    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
