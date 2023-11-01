@@ -11,6 +11,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {userContext} from '../Context/QRdataContext';
 import PopupModal from '../Components/PopupModal';
 const List = () => {
+  const imageStatic = require('../Assets/Images/demoimage.png');
+
   const {addUsers, usersAdded} = useContext(userContext);
   const [modalVisible, SetModalVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState();
@@ -39,15 +41,20 @@ const List = () => {
       {dataForQRCreation()}
 
       {usersAdded.map(element => {
+        console.log(element);
         return (
           <TouchableOpacity
+            key={element.name.value}
             style={styles.buttonBody}
             onPress={() => onPressQrButton(element)}>
             <Text style={{color: 'black'}}>{element.name.value}</Text>
+            {console.log(element.profilePic)}
             <Image
-              source={require('../Assets/Images/image2.png')}
+              source={
+                element.profilePic ? {uri: element.profilePic} : imageStatic
+              }
               resizeMode="contain"
-              style={{height: '100%', width: '40%'}}
+              style={{height: '90%', width: '20%', borderRadius: 50}}
             />
           </TouchableOpacity>
         );
@@ -62,7 +69,7 @@ const WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#ffe9ec',
+    backgroundColor: '#f2f1f6',
     padding: 15,
   },
   buttonBody: {

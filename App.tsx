@@ -16,7 +16,7 @@ import QRcontextProvider from './src/Context/QRcontextProvider';
 function App(): JSX.Element {
   return (
     <SafeAreaView style={styles.body}>
-      <StatusBar backgroundColor={'#ffe9ec'} />
+      <StatusBar backgroundColor={'#f2f1f6'} />
       <QRcontextProvider>
         <NavigationContainer>
           <TabNavigator />

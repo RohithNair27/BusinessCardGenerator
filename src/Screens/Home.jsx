@@ -3,24 +3,36 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
   TouchableOpacity,
   Dimensions,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
-// import PopupModal from '../Components/PopupModal';
 import {userContext} from '../Context/QRdataContext';
 import QRcode from '../Components/ui/QRcode';
+import {launchCamera} from 'react-native-image-picker';
+import {CountryPicker} from 'react-native-country-codes-picker';
 const Home = () => {
-  const {addUsers, usersAdded} = useContext(userContext);
+  let logo = require('../Assets/Images/qrImage.png');
+
+  const HEIGHT = Dimensions.get('window').height;
+  const {addUsers, usersAdded, show, selectFlag, changeCountryCode} =
+    useContext(userContext);
+  const [profilePictureUri, setProfilePictureUri] = useState(false);
+
   const [qrVisible, SetQrVisible] = useState(false);
   const [personData, setPersonData] = useState({
     name: {title: 'Name', value: ''},
-    number: {title: '74104 10123', value: ''},
+    number: {
+      title: '74104 10123',
+      value: '',
+      keyBoardType: 'tel',
+      maxLength: 10,
+    },
     company_name: {title: 'Company Name', value: ''},
-    Email: {title: 'Email', value: ''},
+    Email: {title: 'Email', value: '', keyBoardType: 'email'},
     website: {title: 'Website', value: ''},
     city: {title: 'City', value: ''},
   });
@@ -42,12 +54,21 @@ const Home = () => {
   //QR visisble on modal change
   const dataForQRCreation = () => {
     const qrData = JSON.stringify(personData);
-    return <QRcode value={qrData} />;
-  };
-  const onSaveUser = () => {
-    addUsers(personData);
+
+    return <QRcode value={qrData} logo={logo} />;
   };
 
+  // adding user to the list
+  const onSaveUser = () => {
+    if (profilePictureUri) {
+      addUsers({...personData, profilePic: profilePictureUri});
+    } else {
+      addUsers(personData);
+    }
+    // console.log(usersAdded);
+  };
+
+  // handleClear buttons
   const onClickClear = () => {
     setPersonData({
       name: {title: 'Name', value: ''},
@@ -58,6 +79,44 @@ const Home = () => {
       city: {title: 'City', value: ''},
     });
     SetQrVisible(false);
+    setProfilePictureUri(false);
+  };
+
+  const getMobilePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+        getProfilePictureDevice();
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //This is used to take image from camera
+  const getProfilePictureDevice = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+    launchCamera(options, response => {
+      if (response.didCancel) {
+        console.log('image not picked');
+      } else if (response.error) {
+        console.log('Image picker error: ', response.error);
+      } else {
+        let imageUri = response.assets?.[0]?.uri;
+        console.log(imageUri);
+        setProfilePictureUri(imageUri);
+      }
+    });
   };
 
   return (
@@ -74,14 +133,26 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </View>
+        {profilePictureUri === false ? (
+          <Image
+            source={require('../Assets/Images/demoimage.png')}
+            resizeMode="contain"
+            style={{height: '50%', width: '35%'}}
+          />
+        ) : (
+          <Image
+            source={{uri: profilePictureUri}}
+            resizeMode="contain"
+            style={{height: '50%', borderRadius: 50, width: '35%'}}
+          />
+        )}
 
-        <Image
-          source={require('../Assets/Images/image2.png')}
-          resizeMode="contain"
-          style={{height: '50%', borderRadius: 50, width: '35%'}}
-        />
         <View style={{...styles.button, width: '80%', height: '25%'}}>
-          <Button placeHolder="Choose Profile" backGroundColor={'#007afe'} />
+          <Button
+            placeHolder="Choose Profile"
+            backGroundColor={'#007afe'}
+            onPress={getMobilePermission}
+          />
         </View>
       </View>
       <View style={styles.inputBody}>
@@ -94,6 +165,7 @@ const Home = () => {
                   placeHolder={personData[keys].title}
                   value={personData[keys].value}
                   onValueChange={handleInputChange}
+                  keyBoardType={personData[keys].keyBoardType}
                 />
               </View>
             );
@@ -119,6 +191,22 @@ const Home = () => {
       <View style={{flex: 1, justifyContent: 'center'}}>
         {qrVisible ? dataForQRCreation() : null}
       </View>
+      <CountryPicker
+        show={show}
+        pickerButtonOnPress={item => {
+          changeCountryCode(item.dial_code);
+          selectFlag();
+        }}
+        style={{
+          // Styles for whole modal [View]
+          modal: {
+            height: HEIGHT / 1.5,
+          },
+        }}
+        onBackdropPress={() => {
+          selectFlag();
+        }}
+      />
     </View>
   );
 };
@@ -132,7 +220,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#ffe9ec',
+    backgroundColor: '#f2f1f6',
   },
   topFields: {
     // borderWidth: 1,
@@ -157,6 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'lightgray',
     backgroundColor: 'white',
+    borderWidth: 1,
   },
 
   headerText: {

@@ -3,6 +3,7 @@ import React from 'react';
 import Home from '../Screens/Home';
 import List from '../Screens/List';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -10,7 +11,7 @@ const TabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#ffe9ec',
+          backgroundColor: '#f2f1f6',
           elevation: 0,
           borderColor: 'transparent',
         },
