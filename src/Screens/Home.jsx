@@ -15,11 +15,8 @@ import QRcode from '../Components/ui/QRcode';
 import {launchCamera} from 'react-native-image-picker';
 import {CountryPicker} from 'react-native-country-codes-picker';
 const Home = () => {
-  // let logo = require('../Assets/Images/qrImage.png');
-
   const HEIGHT = Dimensions.get('window').height;
-  const {addUsers, usersAdded, show, selectFlag, changeCountryCode} =
-    useContext(userContext);
+  const {} = useContext(userContext);
   const [profilePictureUri, setProfilePictureUri] = useState(false);
 
   const [qrVisible, SetQrVisible] = useState(false);
@@ -122,7 +119,7 @@ const Home = () => {
 
   return (
     <View style={styles.body}>
-      {/* <View style={styles.topFields}>
+      <View style={styles.topFields}>
         <View
           style={{
             flexDirection: 'row',
@@ -134,19 +131,19 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </View>
-        {profilePictureUri === false ? (
-          // <Image
-          //   source={require('../Assets/Images/demoimage.png')}
-          //   resizeMode="contain"
-          //   style={{height: '50%', width: '35%'}}
-          // />
+        {/* {profilePictureUri === false ? (
+          <Image
+            source={'../'}
+            resizeMode="contain"
+            style={{height: '50%', width: '35%'}}
+          />
         ) : (
           <Image
-            source={{uri: profilePictureUri}}
+            // source={{uri: profilePictureUri}}
             resizeMode="contain"
             style={{height: '50%', borderRadius: 50, width: '35%'}}
           />
-        )}
+        )} */}
 
         <View style={{...styles.button, width: '80%', height: '25%'}}>
           <Button
@@ -192,7 +189,7 @@ const Home = () => {
       <View style={{flex: 1, justifyContent: 'center'}}>
         {qrVisible ? dataForQRCreation() : null}
       </View>
-      <CountryPicker
+      {/* <CountryPicker
         show={show}
         pickerButtonOnPress={item => {
           changeCountryCode(item.dial_code);

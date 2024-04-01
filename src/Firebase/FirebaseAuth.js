@@ -1,8 +1,8 @@
 import auth from '@react-native-firebase/auth';
 
-export const signUpFirebase = (Email_id, Password) => {
-  auth()
-    .createUserWithEmailAndPassword(Email_id, Password)
+export const signUpFirebase = async (email, passorrd) => {
+  return await auth()
+    .createUserWithEmailAndPassword(email, passorrd)
     .then(() => {
       return 'User account created & signed in!';
     })
@@ -14,7 +14,36 @@ export const signUpFirebase = (Email_id, Password) => {
       if (error.code === 'auth/invalid-email') {
         return 'That email address is invalid!';
       }
-
-      console.error(error);
     });
+};
+
+export const loginFirebase = async (email, password) => {
+  return await auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(() => {
+      return 'User exists!';
+    })
+    .catch(error => {
+      console.log(error.code);
+      if (error.code === 'auth/invalid-credential') {
+        return 'Wrong credentials';
+      }
+    });
+};
+
+export const checkLoginStatus = () => {
+  return new Promise((resolve, reject) => {
+    auth().onAuthStateChanged(
+      user => {
+        if (user) {
+          resolve(user);
+        } else {
+          resolve(null);
+        }
+      },
+      error => {
+        reject(error);
+      },
+    );
+  });
 };

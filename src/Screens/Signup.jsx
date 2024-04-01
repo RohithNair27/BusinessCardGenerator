@@ -5,22 +5,49 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
+import Loader from '../Components/ui/Loader';
 import {signUpFirebase} from '../Firebase/FirebaseAuth';
-const SignupPage = () => {
+import {userContext} from '../Context/QRdataContext';
+const SignupPage = ({navigation}) => {
+  const {isLoading, changeLoading} = useContext(userContext);
   const [signupData, setSignupData] = useState({
-    Email_id: '',
-    User_name: '',
-    Password: '',
+    Email_id: {
+      name: 'Email_id',
+      value: '',
+    },
+    User_Name: {
+      name: 'User_Name',
+      value: '',
+    },
+    Password: {
+      name: 'Password',
+      value: '',
+    },
   });
 
-  const onPressSignUp = () => {
-    signUpFirebase(signupData.Email_id, signupData.Password);
+  const onPressSignUp = async () => {
+    changeLoading(true);
+    let response = await signUpFirebase(
+      signupData.Email_id.value,
+      signupData.Password.value,
+    );
+
+    changeLoading(false);
+    console.log(response);
+  };
+  const onChageText = (key, text) => {
+    setSignupData({
+      ...signupData,
+      [key]: {...signupData[key], value: text},
+    });
   };
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <View style={styles.body}>
       <Text style={styles.welcomeText}>Let's make your </Text>
       <Text style={{...styles.welcomeText, color: '#636EAB'}}>account!</Text>
@@ -29,19 +56,25 @@ const SignupPage = () => {
           height={'13%'}
           width={'100%'}
           placeholderAbove={'Email id'}
-          value={signupData.Email_id}
+          value={signupData.Email_id.value}
+          keyProps={signupData.Email_id.name}
+          onValueChange={onChageText}
         />
         <InputField
           height={'13%'}
           width={'100%'}
           placeholderAbove={'User name'}
-          value={signupData.User_name}
+          value={signupData.User_Name.value}
+          keyProps={signupData.User_Name.name}
+          onValueChange={onChageText}
         />
         <InputField
           height={'13%'}
           width={'100%'}
           placeholderAbove={'Password'}
-          value={signupData.Password}
+          value={signupData.Password.value}
+          keyProps={signupData.Password.name}
+          onValueChange={onChageText}
         />
         <Button
           placeHolder={'Sign in'}
@@ -54,7 +87,7 @@ const SignupPage = () => {
 
         <Text>
           Already have an account?
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
             <Text>Sign in</Text>
           </TouchableOpacity>
         </Text>

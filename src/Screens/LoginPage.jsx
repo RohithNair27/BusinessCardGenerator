@@ -5,12 +5,44 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
-import {signUpFirebase} from '../Firebase/FirebaseAuth';
-const LoginPage = () => {
-  return (
+import {userContext} from '../Context/QRdataContext';
+import {loginFirebase} from '../Firebase/FirebaseAuth';
+import Loader from '../Components/ui/Loader';
+const LoginPage = ({navigation}) => {
+  const {isLoading, changeLoading} = useContext(userContext);
+
+  const [loginData, setLoginData] = useState({
+    Email_id: {
+      name: 'Email_id',
+      value: '',
+    },
+    Password: {
+      name: 'Password',
+      value: '',
+    },
+  });
+
+  const onChageText = (key, text) => {
+    setLoginData({
+      ...loginData,
+      [key]: {...loginData[key], value: text},
+    });
+  };
+  const onPressSignUp = async () => {
+    changeLoading(true);
+    let response = await loginFirebase(
+      loginData.Email_id.value,
+      loginData.Password.value,
+    );
+    changeLoading(false);
+    console.log(response);
+  };
+  return isLoading ? (
+    <Loader />
+  ) : (
     <View style={styles.body}>
       <Text style={styles.welcomeText}>Welcome back!</Text>
       <Text style={{...styles.welcomeText, color: '#636EAB'}}>
@@ -21,11 +53,17 @@ const LoginPage = () => {
           height={'13%'}
           width={'100%'}
           placeholderAbove={'Email id'}
+          value={loginData.Email_id.value}
+          keyProps={loginData.Email_id.name}
+          onValueChange={onChageText}
         />
         <InputField
           height={'13%'}
           width={'100%'}
           placeholderAbove={'User name'}
+          value={loginData.Password.value}
+          keyProps={loginData.Password.name}
+          onValueChange={onChageText}
         />
 
         <Button
@@ -34,11 +72,12 @@ const LoginPage = () => {
           backgroundColor={'#636EAB'}
           textColor={'#ffff'}
           height={'13%'}
+          onPress={onPressSignUp}
         />
 
         <Text>
           Don't have an ID?
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SignupPage')}>
             <Text>login</Text>
           </TouchableOpacity>
         </Text>
