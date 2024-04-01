@@ -15,7 +15,7 @@ import QRcode from '../Components/ui/QRcode';
 import {launchCamera} from 'react-native-image-picker';
 import {CountryPicker} from 'react-native-country-codes-picker';
 const Home = () => {
-  let logo = require('../Assets/Images/qrImage.png');
+  // let logo = require('../Assets/Images/qrImage.png');
 
   const HEIGHT = Dimensions.get('window').height;
   const {addUsers, usersAdded, show, selectFlag, changeCountryCode} =
@@ -82,6 +82,7 @@ const Home = () => {
     setProfilePictureUri(false);
   };
 
+  //permission for android
   const getMobilePermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -121,7 +122,7 @@ const Home = () => {
 
   return (
     <View style={styles.body}>
-      <View style={styles.topFields}>
+      {/* <View style={styles.topFields}>
         <View
           style={{
             flexDirection: 'row',
@@ -134,11 +135,11 @@ const Home = () => {
           </View>
         </View>
         {profilePictureUri === false ? (
-          <Image
-            source={require('../Assets/Images/demoimage.png')}
-            resizeMode="contain"
-            style={{height: '50%', width: '35%'}}
-          />
+          // <Image
+          //   source={require('../Assets/Images/demoimage.png')}
+          //   resizeMode="contain"
+          //   style={{height: '50%', width: '35%'}}
+          // />
         ) : (
           <Image
             source={{uri: profilePictureUri}}
@@ -206,7 +207,7 @@ const Home = () => {
         onBackdropPress={() => {
           selectFlag();
         }}
-      />
+      /> */}
     </View>
   );
 };

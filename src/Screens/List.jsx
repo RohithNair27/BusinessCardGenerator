@@ -11,7 +11,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {userContext} from '../Context/QRdataContext';
 import PopupModal from '../Components/PopupModal';
 const List = () => {
-  const imageStatic = require('../Assets/Images/demoimage.png');
+  // const imageStatic = require('../Assets/Images/demoimage.png');
 
   const {addUsers, usersAdded} = useContext(userContext);
   const [modalVisible, SetModalVisible] = useState(false);
