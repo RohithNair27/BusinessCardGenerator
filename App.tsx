@@ -11,17 +11,14 @@ import {
   View,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import TabNavigator from './src/Navigation/TabNavigation';
-import QRcontextProvider from './src/Context/QRcontextProvider';
+import StackNavigation from './src/Navigation/StackNavigation';
+
 function App(): JSX.Element {
   return (
     <SafeAreaView style={styles.body}>
-      <StatusBar backgroundColor={'#f2f1f6'} />
-      <QRcontextProvider>
-        <NavigationContainer>
-          <TabNavigator />
-        </NavigationContainer>
-      </QRcontextProvider>
+      <NavigationContainer>
+        <StackNavigation />
+      </NavigationContainer>
     </SafeAreaView>
   );
 }
@@ -29,6 +26,7 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+    backgroundColor: '#DBE9FF',
   },
 });
 

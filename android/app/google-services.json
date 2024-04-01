@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "805762654130",
+    "project_id": "bizcard-905fc",
+    "storage_bucket": "bizcard-905fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805762654130:android:47e1d28b9fa42f16588eab",
+        "android_client_info": {
+          "package_name": "com.businesscardgenerator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJGA9BJMrDZ0tiYVYyfH7yAAnv3OELIZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

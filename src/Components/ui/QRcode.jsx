@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import QRCode from 'react-native-qrcode-svg';
 const QRcode = ({value, size}) => {
-  let logo = require('../../Assets/Images/qrImage.png');
+  // let logo = require('../../Assets/Images/qrImage.png');
   return (
     <QRCode
       size={size}

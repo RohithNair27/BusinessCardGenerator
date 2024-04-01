@@ -16,22 +16,21 @@ const InputField = ({
   keyProps,
   keyBoardType,
   maxLength,
+  width,
+  height,
+  placeholderAbove,
 }) => {
-  const {show, selectFlag, changeCountryCode, countryCode} =
-    useContext(userContext);
   return (
-    <View style={styles.inputBody}>
-      <TouchableOpacity onPress={() => selectFlag()}>
-        {keyBoardType === 'tel' ? (
-          <Text style={{color: 'black', fontWeight: '600'}}>{countryCode}</Text>
-        ) : null}
-      </TouchableOpacity>
+    <View style={{...styles.inputBody, width: width, height: height}}>
+      <Text style={{marginBottom: '1%', paddingLeft: '2%'}}>
+        {placeholderAbove}
+      </Text>
       <TextInput
         placeholder={placeHolder}
         placeholderTextColor={'lightgray'}
-        style={{color: 'black', fontWeight: '400'}}
-        value={value}
-        onChangeText={text => onValueChange(keyProps, text)}
+        style={styles.inputText}
+        // value={value}
+        // onChangeText={text => onValueChange(keyProps, text)}
         inputMode={keyBoardType}
         maxLength={maxLength}
       />
@@ -45,10 +44,17 @@ const styles = StyleSheet.create({
   inputBody: {
     width: '100%',
     alignItems: 'center',
-    height: '100%',
-    // backgroundColor: 'white',
-    flexDirection: 'row',
-
-    paddingLeft: 10,
+    height: '8%',
+    paddingleft: '10px',
+    alignItems: 'flex-start',
+  },
+  inputText: {
+    // borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    width: '100%',
+    height: '90%',
+    color: 'black',
+    paddingLeft: '4%',
   },
 });
