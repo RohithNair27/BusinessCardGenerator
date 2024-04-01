@@ -38,7 +38,7 @@ const List = () => {
 
   return (
     <ScrollView style={styles.body}>
-      {dataForQRCreation()}
+      {/* {dataForQRCreation()}
 
       {usersAdded.map(element => {
         console.log(element);
@@ -58,7 +58,7 @@ const List = () => {
             />
           </TouchableOpacity>
         );
-      })}
+      })} */}
     </ScrollView>
   );
 };

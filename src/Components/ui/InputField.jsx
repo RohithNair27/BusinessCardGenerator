@@ -29,8 +29,8 @@ const InputField = ({
         placeholder={placeHolder}
         placeholderTextColor={'lightgray'}
         style={styles.inputText}
-        // value={value}
-        // onChangeText={text => onValueChange(keyProps, text)}
+        value={value}
+        onChangeText={text => onValueChange(keyProps, text)}
         inputMode={keyBoardType}
         maxLength={maxLength}
       />
