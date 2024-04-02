@@ -11,6 +11,7 @@ function StackNavigation() {
   const onLoad = async () => {
     try {
       const data = await checkLoginStatus();
+      console.log(data);
       setLoggedin(true);
     } catch (error) {
       setLoggedin(false);

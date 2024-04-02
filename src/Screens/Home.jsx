@@ -14,6 +14,7 @@ import {userContext} from '../Context/QRdataContext';
 import QRcode from '../Components/ui/QRcode';
 import {launchCamera} from 'react-native-image-picker';
 import {CountryPicker} from 'react-native-country-codes-picker';
+import Profile from '../Assets/Images/profile.svg';
 const Home = () => {
   const HEIGHT = Dimensions.get('window').height;
   const {} = useContext(userContext);
@@ -131,6 +132,7 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </View>
+        <Profile />
         {/* {profilePictureUri === false ? (
           <Image
             source={'../'}
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#f2f1f6',
+    backgroundColor: '#DBE9FF',
   },
   topFields: {
     // borderWidth: 1,

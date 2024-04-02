@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-firebase/app": "^19.1.1",
     "@react-native-firebase/auth": "^19.1.1",
     "@react-navigation/bottom-tabs": "^6.5.10",
@@ -43,6 +44,7 @@
     "metro-react-native-babel-preset": "0.76.8",
     "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
+    "reactotron-react-native": "^5.1.5",
     "typescript": "4.8.4"
   },
   "engines": {
