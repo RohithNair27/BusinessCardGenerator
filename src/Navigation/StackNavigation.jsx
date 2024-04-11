@@ -1,18 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import InitialScreen from '../Screens/Initial';
 import TabNavigator from './TabNavigation';
 import SignupPage from '../Screens/Signup';
 import LoginPage from '../Screens/LoginPage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {checkLoginStatus} from '../Firebase/FirebaseAuth';
+import {userContext} from '../Context/QRdataContext';
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
-  const [loggedin, setLoggedin] = useState(false);
+  const {loggedin, setLoggedin} = useContext(userContext);
   const onLoad = async () => {
     try {
       const data = await checkLoginStatus();
       console.log(data);
-      setLoggedin(true);
+      if (data.uid) {
+        setLoggedin(true);
+      }
     } catch (error) {
       setLoggedin(false);
     }
@@ -26,7 +29,7 @@ function StackNavigation() {
       screenOptions={{
         headerShown: false,
       }}>
-      {false ? (
+      {loggedin ? (
         <Stack.Screen name="Tab" component={TabNavigator} />
       ) : (
         <>

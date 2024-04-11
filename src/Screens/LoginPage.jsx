@@ -12,7 +12,8 @@ import {userContext} from '../Context/QRdataContext';
 import {loginFirebase} from '../Firebase/FirebaseAuth';
 import Loader from '../Components/ui/Loader';
 const LoginPage = ({navigation}) => {
-  const {isLoading, changeLoading} = useContext(userContext);
+  const {isLoading, changeLoading, loggedin, setLoggedin} =
+    useContext(userContext);
 
   const [loginData, setLoginData] = useState({
     Email_id: {
@@ -37,6 +38,9 @@ const LoginPage = ({navigation}) => {
       loginData.Email_id.value,
       loginData.Password.value,
     );
+    if (response == 'User exists!') {
+      setLoggedin(true);
+    }
     changeLoading(false);
     console.log(response);
   };
