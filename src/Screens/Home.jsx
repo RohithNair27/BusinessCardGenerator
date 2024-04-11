@@ -3,19 +3,19 @@ import {
   Text,
   View,
   Image,
+  StatusBar,
   TouchableOpacity,
   Dimensions,
   PermissionsAndroid,
 } from 'react-native';
 import React, {useState, useContext} from 'react';
-import InputField from '../Components/ui/InputField';
-import Button from '../Components/ui/Button';
 import {userContext} from '../Context/QRdataContext';
 import QRcode from '../Components/ui/QRcode';
 import {launchCamera} from 'react-native-image-picker';
-import {CountryPicker} from 'react-native-country-codes-picker';
-import Profile from '../Assets/Images/profile.svg';
-const Home = () => {
+import Idcard from '../Assets/Images/id-card.svg';
+import Qr from '../Assets/Images/qrsvg.svg';
+
+const Home = ({navigation}) => {
   const HEIGHT = Dimensions.get('window').height;
   const {} = useContext(userContext);
   const [profilePictureUri, setProfilePictureUri] = useState(false);
@@ -120,93 +120,30 @@ const Home = () => {
 
   return (
     <View style={styles.body}>
+      <StatusBar backgroundColor={'#103550'} />
       <View style={styles.topFields}>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          <Text style={styles.headerText}>Business Card</Text>
-          <View style={styles.clearButtonContainer}>
-            <TouchableOpacity onPress={() => onClickClear()}>
-              <Text style={{color: '#007afe'}}>Clear</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Hello Rohith</Text>
+          <Text style={{...styles.headerText, fontSize: 20}}>Goodmorning</Text>
         </View>
-        <Profile />
-        {/* {profilePictureUri === false ? (
-          <Image
-            source={'../'}
-            resizeMode="contain"
-            style={{height: '50%', width: '35%'}}
-          />
-        ) : (
-          <Image
-            // source={{uri: profilePictureUri}}
-            resizeMode="contain"
-            style={{height: '50%', borderRadius: 50, width: '35%'}}
-          />
-        )} */}
-
-        <View style={{...styles.button, width: '80%', height: '25%'}}>
-          <Button
-            placeHolder="Choose Profile"
-            backGroundColor={'#007afe'}
-            onPress={getMobilePermission}
-          />
+        <View style={styles.navigateCard}>
+          <TouchableOpacity
+            style={styles.navigateEachCard}
+            onPress={() => {
+              navigation.navigate('New Card');
+            }}>
+            <Idcard style={styles.navigationImage} height={'60%'} />
+            <Text>New Card</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navigateEachCard}>
+            <Qr style={styles.navigationImage} height={'60%'} width={'30%'} />
+            <Text>Scan</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.inputBody}>
-        <View style={styles.inputField}>
-          {Object.keys(personData).map(keys => {
-            return (
-              <View key={keys} style={styles.eachInput}>
-                <InputField
-                  keyProps={keys}
-                  placeHolder={personData[keys].title}
-                  value={personData[keys].value}
-                  onValueChange={handleInputChange}
-                  keyBoardType={personData[keys].keyBoardType}
-                />
-              </View>
-            );
-          })}
-          <View style={styles.buttonContainer}>
-            <View style={styles.button}>
-              <Button
-                placeHolder="QR"
-                backGroundColor={'#d95e54'}
-                onPress={onPressQrButton}
-              />
-            </View>
-            <View style={styles.button}>
-              <Button
-                placeHolder="Save"
-                backGroundColor={'#d95e54'}
-                onPress={onSaveUser}
-              />
-            </View>
-          </View>
-        </View>
+        <Text>working</Text>
       </View>
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        {qrVisible ? dataForQRCreation() : null}
-      </View>
-      {/* <CountryPicker
-        show={show}
-        pickerButtonOnPress={item => {
-          changeCountryCode(item.dial_code);
-          selectFlag();
-        }}
-        style={{
-          // Styles for whole modal [View]
-          modal: {
-            height: HEIGHT / 1.5,
-          },
-        }}
-        onBackdropPress={() => {
-          selectFlag();
-        }}
-      /> */}
     </View>
   );
 };
@@ -221,37 +158,59 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#DBE9FF',
+    // borderWidth: 2,
   },
   topFields: {
+    backgroundColor: '#103550',
     // borderWidth: 1,
-    flex: 1.1,
-    width: '80%',
+    height: HEIGHT * 0.3,
+    width: '100%',
+    // justifyContent: 'space-evenly',
+    // alignItems: 'center',
+    // flexDirection: 'row',
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  header: {
+    top: '20%',
+    left: '10%',
+    // borderWidth: 1,
+    borderColor: 'black',
+  },
+  headerText: {
+    fontSize: 40,
+    color: '#ffff',
+  },
+  navigateCard: {
+    position: 'absolute',
+    top: HEIGHT * 0.25,
+    right: '5%',
+    width: '60%',
+    flexDirection: 'row',
+    height: '35%',
     justifyContent: 'space-evenly',
+    zIndex: 1,
+  },
+  navigateEachCard: {
+    justifyContent: 'center',
     alignItems: 'center',
+    width: '40%',
+    backgroundColor: '#ffff',
+    borderRadius: 10,
+    zIndex: 1,
+  },
+  navigationImage: {
+    resizeMode: 'contain',
+    width: '20%',
+    height: '20%',
   },
   inputBody: {
-    // borderWidth: 1,
-    width: '78%',
-    flex: 2,
-  },
-  clearButtonContainer: {
-    position: 'absolute',
-    left: WIDTH / 2.2,
-  },
-  eachInput: {
-    height: '10%',
-    marginVertical: '2.2%',
-    borderWidth: 0.5,
-    borderRadius: 10,
-    borderColor: 'lightgray',
-    backgroundColor: 'white',
+    paddingTop: '15%',
     borderWidth: 1,
-  },
-
-  headerText: {
-    fontSize: 20,
-    color: 'black',
-    fontWeight: '700',
+    height: HEIGHT * 0.4,
+    width: '100%',
+    zIndex: 0,
+    top: HEIGHT * 0.06,
   },
   buttonContainer: {
     // borderWidth: 1,

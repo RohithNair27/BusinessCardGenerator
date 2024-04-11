@@ -12,7 +12,8 @@ import Loader from '../Components/ui/Loader';
 import {signUpFirebase} from '../Firebase/FirebaseAuth';
 import {userContext} from '../Context/QRdataContext';
 const SignupPage = ({navigation}) => {
-  const {isLoading, changeLoading} = useContext(userContext);
+  const {isLoading, changeLoading, loggedin, setLoggedin} =
+    useContext(userContext);
   const [signupData, setSignupData] = useState({
     Email_id: {
       name: 'Email_id',
@@ -34,7 +35,9 @@ const SignupPage = ({navigation}) => {
       signupData.Email_id.value,
       signupData.Password.value,
     );
-
+    if (response === 'User account created & signed in!') {
+      setLoggedin(true);
+    }
     changeLoading(false);
     console.log(response);
   };

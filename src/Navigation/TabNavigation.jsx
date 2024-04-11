@@ -3,7 +3,7 @@ import React from 'react';
 import Home from '../Screens/Home';
 import List from '../Screens/List';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
+import CreateQR from '../Screens/CreateQR';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -15,12 +15,13 @@ const TabNavigator = () => {
           elevation: 0,
           borderColor: 'transparent',
         },
-        tabBarIconStyle: {display: 'none'},
-        tabBarItemStyle: {alignContent: 'center', justifyContent: 'center'},
+        // tabBarIconStyle: {display: 'none'},
+        // tabBarItemStyle: {alignContent: 'center', justifyContent: 'center'},
         tabBarLabelStyle: {fontSize: 14, fontWeight: '500'},
       }}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="List" component={List} />
+      <Tab.Screen name="New Card" component={CreateQR} />
+      {/* <Tab.Screen name="List" component={List} /> */}
     </Tab.Navigator>
   );
 };

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   inputBody: {
     width: '100%',
     alignItems: 'center',
-    height: '8%',
+    // height: '1%',
     paddingleft: '10px',
     alignItems: 'flex-start',
   },
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     width: '100%',
-    height: '90%',
+    // height: '90%',
     color: 'black',
     paddingLeft: '4%',
   },
