@@ -1,12 +1,12 @@
 import auth from '@react-native-firebase/auth';
 
-export const signUpFirebase = async (email, passorrd) => {
+export const signUpFirebase = async (email, passorrd, username) => {
   return await auth()
     .createUserWithEmailAndPassword(email, passorrd)
     .then(async result => {
       return await result.user
         .updateProfile({
-          displayName: 'Rohith Nair',
+          displayName: username,
         })
         .then(function () {
           return 'User account created & signed in!';

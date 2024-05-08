@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {useContext} from 'react';
-import {userContext} from '../../Context/QRdataContext';
+import {useContext, useState} from 'react';
 
+import Entypo from 'react-native-vector-icons/Entypo';
 const InputField = ({
   placeHolder,
   onValueChange,
@@ -19,9 +19,19 @@ const InputField = ({
   width,
   height,
   placeholderAbove,
+  secureTextEntry,
 }) => {
+  const [visiblePassword, setVisiblePassword] = useState(true);
+  const passwordVisible = () => {
+    setVisiblePassword(!visiblePassword);
+  };
   return (
-    <View style={{...styles.inputBody, width: width, height: height}}>
+    <View
+      style={{
+        ...styles.inputBody,
+        width: width,
+        height: height,
+      }}>
       <Text style={{marginBottom: '1%', paddingLeft: '2%'}}>
         {placeholderAbove}
       </Text>
@@ -33,7 +43,19 @@ const InputField = ({
         onChangeText={text => onValueChange(keyProps, text)}
         inputMode={keyBoardType}
         maxLength={maxLength}
+        secureTextEntry={secureTextEntry === visiblePassword}
       />
+      {secureTextEntry ? (
+        <TouchableOpacity
+          style={styles.icons}
+          onPress={() => passwordVisible()}>
+          {visiblePassword ? (
+            <Entypo name="eye-with-line" size={30} color="#000" />
+          ) : (
+            <Entypo name="eye" size={30} color="#000" />
+          )}
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -43,8 +65,7 @@ export default InputField;
 const styles = StyleSheet.create({
   inputBody: {
     width: '100%',
-    alignItems: 'center',
-    // height: '1%',
+    // alignItems: 'center',
     paddingleft: '10px',
     alignItems: 'flex-start',
   },
@@ -56,5 +77,11 @@ const styles = StyleSheet.create({
     // height: '90%',
     color: 'black',
     paddingLeft: '4%',
+  },
+  icons: {
+    position: 'absolute',
+    left: '85%',
+    top: '50%',
+    opacity: '0.9',
   },
 });

@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import Home from '../Screens/Home';
 import List from '../Screens/List';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateQR from '../Screens/CreateQR';
+import {userContext} from '../Context/QRdataContext';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (

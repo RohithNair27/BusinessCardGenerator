@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
@@ -11,9 +12,14 @@ import Button from '../Components/ui/Button';
 import Loader from '../Components/ui/Loader';
 import {signUpFirebase} from '../Firebase/FirebaseAuth';
 import {userContext} from '../Context/QRdataContext';
+import {CommonContext} from '../Context/commonContext/CommonContext';
+import {EmailValidation, PasswordValidation} from '../Utils/validation';
+import Snackbar from '../Components/ui/Snackbar';
 const SignupPage = ({navigation}) => {
   const {isLoading, changeLoading, loggedin, setLoggedin} =
     useContext(userContext);
+  const {snackBarDisplay, showHideSnackBar, snackBarError, changeErrorMessage} =
+    useContext(CommonContext);
   const [signupData, setSignupData] = useState({
     Email_id: {
       name: 'Email_id',
@@ -29,17 +35,53 @@ const SignupPage = ({navigation}) => {
     },
   });
 
+  //this function validates the email locally and handles error messages while sign in
   const onPressSignUp = async () => {
-    changeLoading(true);
-    let response = await signUpFirebase(
-      signupData.Email_id.value,
-      signupData.Password.value,
-    );
-    if (response === 'User account created & signed in!') {
-      setLoggedin(true);
+    const email = signupData.Email_id.value.trimEnd();
+    const password = signupData.Password.value.trimEnd();
+    const username = signupData.User_Name.value.trimEnd();
+
+    const isEmailValid = EmailValidation(email);
+    const isPasswordValid = PasswordValidation(password);
+    if (isEmailValid !== true) {
+      showHideSnackBar(true);
+      showErrorMessage(isEmailValid.messsage);
+      return;
     }
-    changeLoading(false);
-    console.log(response);
+
+    if (isPasswordValid !== true) {
+      showHideSnackBar(true);
+      showErrorMessage(isPasswordValid.messsage);
+      return;
+    }
+
+    if (username === '') {
+      showHideSnackBar(true);
+      showErrorMessage('Kindly add your username');
+      return;
+    }
+    changeLoading(true);
+    try {
+      const response = await signUpFirebase(email, password, username);
+
+      if (response === 'User account created & signed in!') {
+        setLoggedin(true);
+      } else if (response === 'That email address is already in use!') {
+        showErrorMessage('Account exists kindly login');
+      } else {
+        showErrorMessage(response);
+      }
+    } catch (error) {
+      showHideSnackBar(true);
+      showErrorMessage('An error occurred during sign up');
+    } finally {
+      changeLoading(false);
+    }
+  };
+
+  const showErrorMessage = message => {
+    showHideSnackBar(true);
+    changeErrorMessage(message);
   };
   const onChageText = (key, text) => {
     setSignupData({
@@ -52,6 +94,7 @@ const SignupPage = ({navigation}) => {
     <Loader />
   ) : (
     <View style={styles.body}>
+      {snackBarDisplay && <Snackbar error={snackBarError} />}
       <Text style={styles.welcomeText}>Let's make your </Text>
       <Text style={{...styles.welcomeText, color: '#636EAB'}}>account!</Text>
       <View style={styles.bottomBody}>
@@ -62,6 +105,7 @@ const SignupPage = ({navigation}) => {
           value={signupData.Email_id.value}
           keyProps={signupData.Email_id.name}
           onValueChange={onChageText}
+          secureTextEntry={false}
         />
         <InputField
           height={'13%'}
@@ -70,6 +114,7 @@ const SignupPage = ({navigation}) => {
           value={signupData.User_Name.value}
           keyProps={signupData.User_Name.name}
           onValueChange={onChageText}
+          secureTextEntry={false}
         />
         <InputField
           height={'13%'}
@@ -78,6 +123,7 @@ const SignupPage = ({navigation}) => {
           value={signupData.Password.value}
           keyProps={signupData.Password.name}
           onValueChange={onChageText}
+          secureTextEntry={true}
         />
         <Button
           placeHolder={'Sign in'}
@@ -87,13 +133,12 @@ const SignupPage = ({navigation}) => {
           height={'13%'}
           onPress={onPressSignUp}
         />
-
-        <Text>
-          Already have an account?
+        <View style={styles.loginNavigation}>
+          <Text>Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
-            <Text>Sign in</Text>
+            <Text style={{color: '#636EAB'}}>Log in</Text>
           </TouchableOpacity>
-        </Text>
+        </View>
       </View>
     </View>
   );
@@ -127,5 +172,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 0.5,
     width: '100%',
+  },
+  loginNavigation: {
+    height: '10%',
+    width: '65%',
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 });
