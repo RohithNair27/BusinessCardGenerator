@@ -8,11 +8,13 @@ import {checkLoginStatus} from '../Firebase/FirebaseAuth';
 import {userContext} from '../Context/QRdataContext';
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
-  const {loggedin, setLoggedin} = useContext(userContext);
+  const {loggedin, setLoggedin, loginData, setLoginData} =
+    useContext(userContext);
   const onLoad = async () => {
     try {
       const data = await checkLoginStatus();
       console.log(data);
+      setLoginData(data);
       if (data.uid) {
         setLoggedin(true);
       }
