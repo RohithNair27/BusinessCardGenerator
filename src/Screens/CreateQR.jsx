@@ -1,41 +1,163 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
+import Button from '../Components/ui/Button';
+import {useIsFocused} from '@react-navigation/native';
+import QRcode from '../Components/ui/QRcode';
+import QRModal from '../Components/QRModal';
+import Snackbar from '../Components/ui/Snackbar';
+import {CommonContext} from '../Context/commonContext/CommonContext';
+import {
+  EmailValidation,
+  isEmptyString,
+  isPersonalWebsite,
+  isValidPhoneNumber,
+} from '../Utils/validation';
 const CreateQR = () => {
+  const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
+    useContext(CommonContext);
+  const isFocused = useIsFocused();
+  const [showQRcode, setshowQrCode] = useState(false);
   const [personData, setPersonData] = useState({
-    name: {title: 'Name', value: ''},
+    username: {
+      name: 'Your name',
+      value: '',
+      placeHolder: 'ex :- Elon musk',
+      maxLength: 20,
+    },
     number: {
-      title: '74104 10123',
+      name: 'Your number',
       value: '',
       keyBoardType: 'tel',
       maxLength: 10,
+      placeHolder: 'ex :- 9234******',
     },
-    company_name: {title: 'Company Name', value: ''},
-    Email: {title: 'Email', value: '', keyBoardType: 'email'},
-    website: {title: 'Website', value: ''},
-    city: {title: 'City', value: ''},
+    company_name: {
+      name: 'Your company name',
+      value: '',
+      placeHolder: 'ex :- Google',
+      maxLength: 30,
+    },
+    Email: {
+      name: 'Enter your email',
+      value: '',
+      keyBoardType: 'email',
+      placeHolder: 'ex :- yourname@gmail.com',
+      maxLength: 50,
+    },
+    website: {
+      name: 'Enter your website',
+      value: '',
+      placeHolder: 'ex :- yourwebsite.dev',
+      maxLength: 30,
+    },
+    city: {
+      name: 'Enter your city',
+      value: '',
+      placeHolder: 'ex :- New York',
+      maxLength: 50,
+    },
   });
+  const [qrData, setQrData] = useState();
+  const onPressCreateQrCode = async () => {
+    // console.log('ptessed');
+    const validated_name = personData.username.value.trimEnd();
+    const validated_number = personData.number.value.trimEnd();
+    const validated_company_name = personData.company_name.value.trimEnd();
+    const validated_email = personData.Email.value.trimEnd();
+    const validated_website = personData.website.name.trimEnd();
+    const validated_city = personData.city.name.trimEnd();
+
+    const isNameValid = isEmptyString(validated_name);
+    const isNumberValid = isValidPhoneNumber(validated_number);
+    const isCompanyNameValid = isEmptyString(validated_company_name);
+    const isEmail = EmailValidation(validated_email);
+    // const isWebsite = isPersonalWebsite(validated_website);
+    const isCityValid = isEmptyString(validated_city);
+
+    if (isNameValid !== true) {
+      showErrorMessage(isNameValid.messsage);
+      return;
+    }
+
+    if (isNumberValid !== true) {
+      showErrorMessage(isNumberValid.messsage);
+      return;
+    }
+
+    if (isCompanyNameValid !== true) {
+      showErrorMessage(isCompanyNameValid.messsage);
+      return;
+    }
+    if (isEmail !== true) {
+      showErrorMessage(isEmail.messsage);
+      return;
+    }
+
+    if (isCityValid !== true) {
+      showErrorMessage(isCityValid.messsage);
+      return;
+    }
+    setQrData({
+      name: validated_name,
+      number: validated_number,
+      company_name: validated_company_name,
+      email: validated_email,
+      website: validated_website,
+      city: validated_city,
+    });
+    onPressCreateQr();
+  };
+  const showErrorMessage = message => {
+    showHideSnackBar(true);
+    changeErrorMessage(message);
+  };
+  const onChageText = (key, text) => {
+    setPersonData({
+      ...personData,
+      [key]: {...personData[key], value: text},
+    });
+  };
+  function onPressCreateQr() {
+    setshowQrCode(!showQRcode);
+  }
 
   return (
     <View style={styles.body}>
-      <Text style={styles.HeadingText}>Kindly enter the data you want to</Text>
-      <Text style={{...styles.HeadingText, color: '#636EAB'}}>share!</Text>
-      <Text>CreateQR</Text>
+      {/* {isFocused ? <StatusBar backgroundColor={'#DBE9FF'} /> : null} */}
+      {showQRcode ? <QRModal onClick={onPressCreateQr} data={qrData} /> : null}
+      {snackBarDisplay && <Snackbar error={snackBarError} />}
+      {/* <Text style={styles.HeadingText}>Data for QR</Text> */}
+      <Text style={{...styles.HeadingText, color: '#636EAB'}}>
+        Create a QR!
+      </Text>
       <View style={styles.inputBody}>
         {Object.keys(personData).map(keys => {
           return (
             <View key={keys} style={styles.eachInput}>
               <InputField
+                placeholderAbove={personData[keys].name}
                 keyProps={keys}
-                placeHolder={personData[keys].title}
+                placeHolder={personData[keys].placeHolder}
                 value={personData[keys].value}
-                // onValueChange={handleInputChange}
+                onValueChange={onChageText}
                 keyBoardType={personData[keys].keyBoardType}
+                borderColor={'#636EAB'}
+                compulsory={true}
+                maxLength={personData[keys].maxLength}
               />
             </View>
           );
         })}
       </View>
+      <Button
+        placeHolder={'Create QR'}
+        backgroundColor={'#636EAB'}
+        width={'70%'}
+        height={'6.5%'}
+        textColor={'#fff'}
+        onPress={() => onPressCreateQrCode()}
+      />
     </View>
   );
 };
@@ -47,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#DBE9FF',
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'space-evenly',
     padding: '6%',
   },
   HeadingText: {
@@ -57,8 +179,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputBody: {
-    width: '85  %',
-    height: '75%',
-    borderWidth: 1,
+    width: '85%',
+    height: '70%',
+
+    justifyContent: 'space-between',
   },
 });

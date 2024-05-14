@@ -44,19 +44,16 @@ const SignupPage = ({navigation}) => {
     const isEmailValid = EmailValidation(email);
     const isPasswordValid = PasswordValidation(password);
     if (isEmailValid !== true) {
-      showHideSnackBar(true);
       showErrorMessage(isEmailValid.messsage);
       return;
     }
 
     if (isPasswordValid !== true) {
-      showHideSnackBar(true);
       showErrorMessage(isPasswordValid.messsage);
       return;
     }
 
     if (username === '') {
-      showHideSnackBar(true);
       showErrorMessage('Kindly add your username');
       return;
     }
@@ -72,7 +69,6 @@ const SignupPage = ({navigation}) => {
         showErrorMessage(response);
       }
     } catch (error) {
-      showHideSnackBar(true);
       showErrorMessage('An error occurred during sign up');
     } finally {
       changeLoading(false);

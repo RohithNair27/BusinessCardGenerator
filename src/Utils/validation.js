@@ -23,3 +23,40 @@ export const PasswordValidation = Password => {
     };
   }
 };
+
+export function isEmptyString(str) {
+  const regex = /^(?!\s*$).+/;
+  if (regex.test(str)) {
+    return true;
+  } else {
+    return {
+      heading: 'Error',
+      messsage: 'Kindly enter data',
+    };
+  }
+}
+export function isPersonalWebsite(str) {
+  const regex = /(http(s)?)?([\w-]+\.)+[\w-]+([\w- ;,./?%&=]*)?/;
+  console.log(regex.test(str), 'test');
+  if (regex.test(str)) {
+    return true;
+  } else {
+    return {
+      heading: 'Error',
+      messsage: 'Please enter a valid website',
+    };
+  }
+}
+
+export function isValidPhoneNumber(str) {
+  const regex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+
+  if (regex.test(str)) {
+    return true;
+  } else {
+    return {
+      heading: 'Error',
+      messsage: 'Please enter a valid number',
+    };
+  }
+}

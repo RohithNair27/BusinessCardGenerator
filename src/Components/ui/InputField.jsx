@@ -20,6 +20,8 @@ const InputField = ({
   height,
   placeholderAbove,
   secureTextEntry,
+  borderColor,
+  compulsory,
 }) => {
   const [visiblePassword, setVisiblePassword] = useState(true);
   const passwordVisible = () => {
@@ -34,11 +36,16 @@ const InputField = ({
       }}>
       <Text style={{marginBottom: '1%', paddingLeft: '2%'}}>
         {placeholderAbove}
+        {placeholderAbove !== 'Enter your website' ? (
+          <Text style={{color: 'red', paddingLeft: 10}}>*</Text>
+        ) : null}
       </Text>
       <TextInput
         placeholder={placeHolder}
         placeholderTextColor={'lightgray'}
-        style={styles.inputText}
+        style={{
+          ...styles.inputText,
+        }}
         value={value}
         onChangeText={text => onValueChange(keyProps, text)}
         inputMode={keyBoardType}
@@ -71,7 +78,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     // borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: 'white',
     width: '100%',
     // height: '90%',

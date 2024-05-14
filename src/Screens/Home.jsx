@@ -10,43 +10,19 @@ import {
 } from 'react-native';
 import React, {useState, useContext} from 'react';
 import {userContext} from '../Context/QRdataContext';
+import {CommonContext} from '../Context/commonContext/CommonContext';
 import QRcode from '../Components/ui/QRcode';
 import {launchCamera} from 'react-native-image-picker';
 import Idcard from '../Assets/Images/id-card.svg';
 import Qr from '../Assets/Images/qrsvg.svg';
-
+import InfoCards from '../Components/ui/InfoCards';
+import QRModal from '../Components/QRModal';
 const Home = ({navigation}) => {
   const HEIGHT = Dimensions.get('window').height;
-  const {} = useContext(userContext);
-  const [profilePictureUri, setProfilePictureUri] = useState(false);
+  const {loginData} = useContext(userContext);
 
-  const [qrVisible, SetQrVisible] = useState(false);
-  const [personData, setPersonData] = useState({
-    name: {title: 'Name', value: ''},
-    number: {
-      title: '74104 10123',
-      value: '',
-      keyBoardType: 'tel',
-      maxLength: 10,
-    },
-    company_name: {title: 'Company Name', value: ''},
-    Email: {title: 'Email', value: '', keyBoardType: 'email'},
-    website: {title: 'Website', value: ''},
-    city: {title: 'City', value: ''},
-  });
-
-  //handles opening and closing of modal
   const onPressQrButton = () => {
     SetQrVisible(!qrVisible);
-  };
-
-  //This code handles the change in input values and adds it to personData
-  const handleInputChange = (key, text) => {
-    setPersonData({
-      ...personData,
-      [key]: {...personData[key], value: text},
-    });
-    SetQrVisible(false);
   };
 
   //QR visisble on modal change
@@ -121,10 +97,13 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.body}>
       <StatusBar backgroundColor={'#103550'} />
+
       <View style={styles.topFields}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Hello Rohith</Text>
-          <Text style={{...styles.headerText, fontSize: 20}}>Goodmorning</Text>
+          <Text style={styles.headerText}>Hello {loginData?.displayName}</Text>
+          <Text style={{...styles.headerText, fontSize: 20}}>
+            Who you want to meet today?
+          </Text>
         </View>
         <View style={styles.navigateCard}>
           <TouchableOpacity
@@ -141,9 +120,11 @@ const Home = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.inputBody}>
-        <Text>working</Text>
-      </View>
+      {/* <View style={styles.inputBody}>
+        <InfoCards />
+        <InfoCards />
+        <InfoCards />
+      </View> */}
     </View>
   );
 };
@@ -168,11 +149,11 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-evenly',
     // alignItems: 'center',
     // flexDirection: 'row',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+    // borderBottomLeftRadius: 40,
+    // borderBottomRightRadius: 40,
   },
   header: {
-    top: '20%',
+    top: '10%',
     left: '10%',
     // borderWidth: 1,
     borderColor: 'black',

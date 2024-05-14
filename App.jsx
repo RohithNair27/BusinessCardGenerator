@@ -5,16 +5,21 @@ import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/Navigation/StackNavigation';
 import CommonContextProvider from './src/Context/commonContext/CommonContextProvider';
 import QRcontextProvider from './src/Context/QRcontextProvider';
+import PersonalContextProvider from './src/Context/PersonalDataContext/PersonalContextProvider';
+import AppDrawer from './src/Navigation/DrawerNavigation';
+
 function App() {
   return (
     <CommonContextProvider>
       <QRcontextProvider>
-        <StatusBar backgroundColor={'#DBE9FF'} />
-        <SafeAreaView style={styles.body}>
-          <NavigationContainer>
-            <StackNavigation />
-          </NavigationContainer>
-        </SafeAreaView>
+        <PersonalContextProvider>
+          <StatusBar backgroundColor={'#DBE9FF'} />
+          <SafeAreaView style={styles.body}>
+            <NavigationContainer>
+              <StackNavigation />
+            </NavigationContainer>
+          </SafeAreaView>
+        </PersonalContextProvider>
       </QRcontextProvider>
     </CommonContextProvider>
   );

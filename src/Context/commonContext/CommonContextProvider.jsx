@@ -6,6 +6,7 @@ const CommonContextProvider = ({children}) => {
   const [snackBarError, setSnackBarError] = useState('Please try again');
   const showHideSnackBar = () => {
     setsnackBarDisplay(!snackBarDisplay);
+
     if (!!snackBarDisplay) {
       changeErrorMessage();
     }
