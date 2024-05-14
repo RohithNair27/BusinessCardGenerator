@@ -6,6 +6,8 @@ import LoginPage from '../Screens/LoginPage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {checkLoginStatus} from '../Firebase/FirebaseAuth';
 import {userContext} from '../Context/QRdataContext';
+import AppDrawer from './DrawerNavigation';
+
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const {loggedin, setLoggedin, loginData, setLoginData} =
@@ -32,13 +34,16 @@ function StackNavigation() {
         headerShown: false,
       }}>
       {loggedin ? (
-        <Stack.Screen name="Tab" component={TabNavigator} />
+        <Stack.Group>
+          {/* <Stack.Screen name="Tab" component={TabNavigator} /> */}
+          <Stack.Screen name="drawerNavigation" component={AppDrawer} />
+        </Stack.Group>
       ) : (
-        <>
+        <Stack.Group>
           <Stack.Screen name="InitialScreen" component={InitialScreen} />
           <Stack.Screen name="SignupPage" component={SignupPage} />
           <Stack.Screen name="LoginPage" component={LoginPage} />
-        </>
+        </Stack.Group>
       )}
     </Stack.Navigator>
   );

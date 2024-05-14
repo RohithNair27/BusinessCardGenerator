@@ -1,10 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
 import Home from '../Screens/Home';
-import List from '../Screens/List';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateQR from '../Screens/CreateQR';
 import {userContext} from '../Context/QRdataContext';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -12,17 +14,42 @@ const TabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#f2f1f6',
-          elevation: 0,
-          borderColor: 'transparent',
+          // backgroundColor: '#103550',
+          backgroundColor: '#DBE9FF',
+          elevation: 5,
+          height: '8%',
         },
-        // tabBarIconStyle: {display: 'none'},
-        // tabBarItemStyle: {alignContent: 'center', justifyContent: 'center'},
+
         tabBarLabelStyle: {fontSize: 14, fontWeight: '500'},
       }}>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="New Card" component={CreateQR} />
-      {/* <Tab.Screen name="List" component={List} /> */}
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name="home-outline"
+              size={30}
+              color={focused ? '#103550' : 'gray'}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="New Card"
+        component={CreateQR}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name="id-card-outline"
+              size={30}
+              color={focused ? '#103550' : 'gray'}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
