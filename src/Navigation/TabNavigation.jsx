@@ -1,12 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
 import Home from '../Screens/Home';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateQR from '../Screens/CreateQR';
-import {userContext} from '../Context/QRdataContext';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CameraQR from '../Screens/camera';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -30,7 +28,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Ionicons
               name="home-outline"
-              size={30}
+              size={20}
               color={focused ? '#103550' : 'gray'}
             />
           ),
@@ -44,7 +42,21 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Ionicons
               name="id-card-outline"
-              size={30}
+              size={20}
+              color={focused ? '#103550' : 'gray'}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Scan"
+        component={CameraQR}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name="scan-sharp"
+              size={20}
               color={focused ? '#103550' : 'gray'}
             />
           ),
@@ -55,5 +67,3 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
-
-const styles = StyleSheet.create({});

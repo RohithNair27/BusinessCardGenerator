@@ -1,35 +1,81 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, Text, StyleSheet, Image, Linking} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerItem,
 } from '@react-navigation/drawer';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Profile from '../../Assets/Images/profile_drawer.svg';
+import QRModal from '../QRModal';
 const AppDrawerItem = props => {
+  const supportedURL = 'http://play.google.com/store';
+  const handlePress = async () => {
+    const supported = await Linking.canOpenURL(supportedURL);
+    if (supported) {
+      await Linking.openURL(supportedURL);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${supportedURL}`);
+    }
+  };
+
   return (
-    <DrawerContentScrollView {...props}>
+    <>
       <View style={styles.drawerHeader}>
-        <Text style={styles.drawerHeaderText}>BizCard</Text>
-        <Text style={styles.drawerHeaderText}>Tuesday</Text>
-        <Text style={styles.drawerHeaderText}>12:30 AM</Text>
+        <Profile />
+        <Text style={styles.drawerHeaderText}>Rohtih K Nair</Text>
+        <Text
+          style={{
+            ...styles.drawerHeaderText,
+            fontSize: 12,
+            color: '#777777',
+            fontWeight: 'normal',
+          }}>
+          Rohithnair@gmail.com
+        </Text>
       </View>
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
+      <DrawerContentScrollView>
+        <DrawerItemList {...props} />
+
+        <DrawerItem
+          icon={() => {
+            return <MaterialCommunityIcons size={24} name={'logout'} />;
+          }}
+          label="Logout"
+          onPress={() => console.log('FIRE CUSTOM LOGOUT FUNCTION')}
+        />
+        <DrawerItem
+          icon={() => {
+            return <MaterialCommunityIcons size={24} name={'star'} />;
+          }}
+          label="Rate us"
+          onPress={() => handlePress()}
+        />
+      </DrawerContentScrollView>
+      <View style={styles.footer}>
+        <Text>Version 0.0.1</Text>
+        {/* <Text></Text> */}
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   drawerHeader: {
+    paddingLeft: 10,
     height: 150,
-    // backgroundColor: '#103550',
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   drawerHeaderText: {
-    // color: '#fff',
     color: '#103550',
-    fontSize: 18,
+
+    fontSize: 20,
     fontWeight: 'bold',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 10,
+    alignSelf: 'center',
   },
 });
 

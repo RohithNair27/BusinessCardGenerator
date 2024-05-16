@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, StatusBar} from 'react-native';
+import {StyleSheet, Text, View, StatusBar, ScrollView} from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
@@ -60,7 +60,6 @@ const CreateQR = () => {
   });
   const [qrData, setQrData] = useState();
   const onPressCreateQrCode = async () => {
-    // console.log('ptessed');
     const validated_name = personData.username.value.trimEnd();
     const validated_number = personData.number.value.trimEnd();
     const validated_company_name = personData.company_name.value.trimEnd();
@@ -124,40 +123,41 @@ const CreateQR = () => {
 
   return (
     <View style={styles.body}>
-      {/* {isFocused ? <StatusBar backgroundColor={'#DBE9FF'} /> : null} */}
       {showQRcode ? <QRModal onClick={onPressCreateQr} data={qrData} /> : null}
       {snackBarDisplay && <Snackbar error={snackBarError} />}
       {/* <Text style={styles.HeadingText}>Data for QR</Text> */}
-      <Text style={{...styles.HeadingText, color: '#636EAB'}}>
-        Create a QR!
-      </Text>
-      <View style={styles.inputBody}>
-        {Object.keys(personData).map(keys => {
-          return (
-            <View key={keys} style={styles.eachInput}>
-              <InputField
-                placeholderAbove={personData[keys].name}
-                keyProps={keys}
-                placeHolder={personData[keys].placeHolder}
-                value={personData[keys].value}
-                onValueChange={onChageText}
-                keyBoardType={personData[keys].keyBoardType}
-                borderColor={'#636EAB'}
-                compulsory={true}
-                maxLength={personData[keys].maxLength}
-              />
-            </View>
-          );
-        })}
-      </View>
-      <Button
-        placeHolder={'Create QR'}
-        backgroundColor={'#636EAB'}
-        width={'70%'}
-        height={'6.5%'}
-        textColor={'#fff'}
-        onPress={() => onPressCreateQrCode()}
-      />
+      <ScrollView style={{width: '90%', height: '100%'}}>
+        <Text style={{...styles.HeadingText, color: '#636EAB'}}>
+          Create a QR!
+        </Text>
+        <View style={styles.inputBody}>
+          {Object.keys(personData).map(keys => {
+            return (
+              <View key={keys} style={styles.eachInput}>
+                <InputField
+                  placeholderAbove={personData[keys].name}
+                  keyProps={keys}
+                  placeHolder={personData[keys].placeHolder}
+                  value={personData[keys].value}
+                  onValueChange={onChageText}
+                  keyBoardType={personData[keys].keyBoardType}
+                  borderColor={'#636EAB'}
+                  compulsory={true}
+                  maxLength={personData[keys].maxLength}
+                />
+              </View>
+            );
+          })}
+          <Button
+            placeHolder={'Create QR'}
+            backgroundColor={'#636EAB'}
+            width={'70%'}
+            height={'20%'}
+            textColor={'#fff'}
+            onPress={() => onPressCreateQrCode()}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -179,9 +179,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputBody: {
-    width: '85%',
-    height: '70%',
-
+    // borderWidth: 1,
+    width: '100%',
+    alignSelf: 'center',
     justifyContent: 'space-between',
   },
 });

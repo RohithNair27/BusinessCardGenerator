@@ -7,7 +7,7 @@ export const storeDataLocally = async (key, value) => {
   }
 };
 
-const getDataLocally = async key => {
+export const getDataLocally = async key => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {

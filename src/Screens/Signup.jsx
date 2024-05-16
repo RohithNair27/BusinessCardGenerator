@@ -66,7 +66,7 @@ const SignupPage = ({navigation}) => {
       } else if (response === 'That email address is already in use!') {
         showErrorMessage('Account exists kindly login');
       } else {
-        showErrorMessage(response);
+        showErrorMessage('error');
       }
     } catch (error) {
       showErrorMessage('An error occurred during sign up');
