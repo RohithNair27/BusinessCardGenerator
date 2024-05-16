@@ -2,11 +2,11 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   StatusBar,
   TouchableOpacity,
   Dimensions,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useContext} from 'react';
 import {userContext} from '../Context/QRdataContext';
@@ -16,10 +16,78 @@ import {launchCamera} from 'react-native-image-picker';
 import Idcard from '../Assets/Images/id-card.svg';
 import Qr from '../Assets/Images/qrsvg.svg';
 import InfoCards from '../Components/ui/InfoCards';
-import QRModal from '../Components/QRModal';
+import {MasonryFlashList} from '@shopify/flash-list';
+import {getDataLocally} from '../Utils/AsyncStorage';
+
 const Home = ({navigation}) => {
   const HEIGHT = Dimensions.get('window').height;
   const {loginData} = useContext(userContext);
+
+  const data = [
+    {
+      no: 1,
+      name: 'Imogene Barrows',
+      age: 56,
+      tel: '+1-287-229-7009',
+      email: 'schmeler.laurie@cummings.biz',
+    },
+    {
+      no: 2,
+      name: 'Delilah Haley',
+      age: 32,
+      tel: '1-737-346-9860',
+      email: 'rmoore@luettgen.com',
+    },
+    {
+      no: 3,
+      name: 'Terence Simonis',
+      age: 35,
+      tel: '624-848-9816 x446',
+      email: 'bogan.jerry@wuckert.com',
+    },
+    {
+      no: 4,
+      name: 'Darrin Boehm',
+      age: 20,
+      tel: '578.973.9835 x271',
+      email: 'marquardt.brant@hotmail.com',
+    },
+    {
+      no: 5,
+      name: 'Tyrique Krajcik',
+      age: 21,
+      tel: '627-797-5470 x2770',
+      email: 'heathcote.eldon@goodwin.com',
+    },
+    {
+      no: 5,
+      name: 'Tyrique Krajcik',
+      age: 21,
+      tel: '627-797-5470 x2770',
+      email: 'heathcote.eldon@goodwin.com',
+    },
+    {
+      no: 5,
+      name: 'Tyrique Krajcik',
+      age: 21,
+      tel: '627-797-5470 x2770',
+      email: 'heathcote.eldon@goodwin.com',
+    },
+    {
+      no: 5,
+      name: 'Tyrique Krajcik',
+      age: 21,
+      tel: '627-797-5470 x2770',
+      email: 'heathcote.eldon@goodwin.com',
+    },
+    {
+      no: 5,
+      name: 'Tyrique Krajcik',
+      age: 21,
+      tel: '627-797-5470 x2770',
+      email: 'heathcote.eldon@goodwin.com',
+    },
+  ];
 
   const onPressQrButton = () => {
     SetQrVisible(!qrVisible);
@@ -114,17 +182,26 @@ const Home = ({navigation}) => {
             <Idcard style={styles.navigationImage} height={'60%'} />
             <Text>New Card</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navigateEachCard}>
+          <TouchableOpacity
+            style={styles.navigateEachCard}
+            onPress={() => {
+              navigation.navigate('Scan');
+            }}>
             <Qr style={styles.navigationImage} height={'60%'} width={'30%'} />
             <Text>Scan</Text>
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View style={styles.inputBody}>
-        <InfoCards />
-        <InfoCards />
-        <InfoCards />
-      </View> */}
+      <View style={styles.inputBody}>
+        <MasonryFlashList
+          renderItem={({item}) => {
+            return <InfoCards item={item} />;
+          }}
+          estimatedItemSize={50}
+          data={data}
+          numColumns={2}
+        />
+      </View>
     </View>
   );
 };
@@ -139,23 +216,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#DBE9FF',
-    // borderWidth: 2,
   },
   topFields: {
     backgroundColor: '#103550',
     // borderWidth: 1,
     height: HEIGHT * 0.3,
     width: '100%',
-    // justifyContent: 'space-evenly',
-    // alignItems: 'center',
-    // flexDirection: 'row',
-    // borderBottomLeftRadius: 40,
-    // borderBottomRightRadius: 40,
   },
   header: {
     top: '10%',
     left: '10%',
-    // borderWidth: 1,
     borderColor: 'black',
   },
   headerText: {
@@ -176,9 +246,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '40%',
-    backgroundColor: '#ffff',
+    backgroundColor: '#ffffff',
     borderRadius: 10,
-    zIndex: 1,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   navigationImage: {
     resizeMode: 'contain',
@@ -186,11 +263,11 @@ const styles = StyleSheet.create({
     height: '20%',
   },
   inputBody: {
-    paddingTop: '15%',
-    borderWidth: 1,
-    height: HEIGHT * 0.4,
+    paddingTop: '10%',
+    // borderWidth: 1,
+    height: HEIGHT * 0.48,
     width: '100%',
-    zIndex: 0,
+
     top: HEIGHT * 0.06,
   },
   buttonContainer: {
@@ -203,5 +280,13 @@ const styles = StyleSheet.create({
   button: {
     width: '30%',
     height: '30%',
+  },
+  row: {
+    borderWidth: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,19 +1,31 @@
-import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import Office from '../../Assets/Images/office.svg';
 import React from 'react';
-import Idcard from '../../Assets/Images/man1.svg';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-const InfoCards = () => {
+
+const InfoCards = ({item}) => {
   return (
-    <View style={styles.body}>
-      <Idcard style={{borderWidth: 1, height: 100, width: 100}} />
-      <View style={styles.textBody}>
-        <Text>Rohith Nair</Text>
-        <Text>Role</Text>
-        <Text>just added</Text>
+    <TouchableOpacity style={styles.container}>
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>ID card</Text>
+        </View>
+        <View style={styles.content}>
+          {/* <Office /> */}
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.position}>Software Engineer</Text>
+            <Text style={styles.idNumber}>Tel: {item.tel}</Text>
+          </View>
+        </View>
       </View>
-      <Ionicons name="call" size={30} color="#000" />
-      <Ionicons name="mail" size={30} color="#000" />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -21,18 +33,66 @@ export default InfoCards;
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-  body: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    width: '100%',
-    height: HEIGHT * 0.15,
-    // justifyContent: 'space-evenly',
-  },
-  textBody: {
-    // borderWidth: 1,
-    width: '50%',
+  container: {
+    flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  card: {
+    width: '85%',
+    height: '95%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  header: {
+    backgroundColor: '#FF7377',
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  headerText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  content: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    padding: 10,
+    alignItems: 'center',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  position: {
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  idNumber: {
+    fontSize: 12,
+    color: '#777777',
+  },
+  holderContainer: {
+    backgroundColor: '#e0e0e0',
+    padding: 5,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  holderText: {
+    color: '#333333',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 12,
   },
 });

@@ -3,7 +3,7 @@ import React from 'react';
 
 const Button = ({
   placeHolder,
-  borderColor,
+  bordercolor,
   onPress,
   backgroundColor,
   textColor,
@@ -17,6 +17,8 @@ const Button = ({
         backgroundColor: backgroundColor,
         width: width,
         height: height,
+        borderColor: bordercolor,
+        borderWidth: bordercolor ? 1 : 0,
       }}
       onPress={() => onPress()}>
       <Text style={{...styles.text, color: textColor}}>{placeHolder}</Text>
@@ -31,7 +33,9 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     width: '85%',
     height: '7%',
-    borderRadius: 15,
+    borderRadius: 10,
+
+    bordercolor: 'none',
     alignItems: 'center',
     justifyContent: 'center',
   },
