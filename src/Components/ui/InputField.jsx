@@ -9,6 +9,7 @@ import React from 'react';
 import {useContext, useState} from 'react';
 
 import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const InputField = ({
   placeHolder,
   onValueChange,
@@ -22,48 +23,77 @@ const InputField = ({
   secureTextEntry,
   borderColor,
   compulsory,
+  icon,
+  paddingLeft,
 }) => {
   const [visiblePassword, setVisiblePassword] = useState(true);
   const passwordVisible = () => {
     setVisiblePassword(!visiblePassword);
   };
+
+  const IconDisplay = () => {
+    return (
+      <TouchableOpacity style={styles.icons} onPress={() => passwordVisible()}>
+        {visiblePassword ? (
+          <Entypo name="eye-with-line" size={30} color="#000" />
+        ) : (
+          <Entypo name="eye" size={30} color="#000" />
+        )}
+      </TouchableOpacity>
+    );
+  };
   return (
-    <View
-      style={{
-        ...styles.inputBody,
-        width: width,
-        height: height,
-      }}>
-      <Text style={{marginBottom: '1%', paddingLeft: '2%'}}>
-        {placeholderAbove}
-        {placeholderAbove !== 'Enter your website' ? (
-          <Text style={{color: 'red', paddingLeft: 10}}>*</Text>
-        ) : null}
-      </Text>
-      <TextInput
-        placeholder={placeHolder}
-        placeholderTextColor={'lightgray'}
-        style={{
-          ...styles.inputText,
-        }}
-        value={value}
-        onChangeText={text => onValueChange(keyProps, text)}
-        inputMode={keyBoardType}
-        maxLength={maxLength}
-        secureTextEntry={secureTextEntry === visiblePassword}
-      />
-      {secureTextEntry ? (
-        <TouchableOpacity
-          style={styles.icons}
-          onPress={() => passwordVisible()}>
-          {visiblePassword ? (
-            <Entypo name="eye-with-line" size={30} color="#000" />
-          ) : (
-            <Entypo name="eye" size={30} color="#000" />
-          )}
-        </TouchableOpacity>
+    <>
+      {placeholderAbove ? (
+        <Text
+          style={{
+            marginBottom: '1%',
+            paddingLeft: '2%',
+          }}>
+          {compulsory ? <Text style={{color: 'red'}}>*</Text> : null}
+          {placeholderAbove}
+        </Text>
       ) : null}
-    </View>
+      <View
+        style={{
+          ...styles.inputBody,
+          width: width,
+          height: height,
+          paddingLeft: paddingLeft,
+        }}>
+        <TextInput
+          placeholder={placeHolder}
+          placeholderTextColor={'lightgray'}
+          style={styles.inputText}
+          value={value}
+          onChangeText={text => onValueChange(keyProps, text)}
+          inputMode={keyBoardType}
+          maxLength={maxLength}
+          secureTextEntry={secureTextEntry === visiblePassword}
+        />
+        {icon === 'search' ? (
+          <TouchableOpacity>
+            <FontAwesome5
+              name="search"
+              size={25}
+              color="lightgray"
+              style={styles.icons}
+            />
+          </TouchableOpacity>
+        ) : null}
+        {secureTextEntry ? (
+          <TouchableOpacity
+            style={styles.icons}
+            onPress={() => passwordVisible()}>
+            {visiblePassword ? (
+              <Entypo name="eye-with-line" size={30} color="#000" />
+            ) : (
+              <Entypo name="eye" size={30} color="#000" />
+            )}
+          </TouchableOpacity>
+        ) : null}
+      </View>
+    </>
   );
 };
 
@@ -71,24 +101,23 @@ export default InputField;
 
 const styles = StyleSheet.create({
   inputBody: {
-    width: '100%',
-    // alignItems: 'center',
+    width: '80%',
+    height: '35%',
     paddingleft: '10px',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 1,
+    backgroundColor: 'white',
+    paddingLeft: '5%',
+    borderRadius: 10,
   },
   inputText: {
-    // borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: 'white',
     width: '100%',
-    // height: '90%',
     color: 'black',
-    paddingLeft: '4%',
   },
   icons: {
-    position: 'absolute',
-    left: '85%',
-    top: '50%',
-    opacity: '0.9',
+    position: 'relative',
+    right: 20,
   },
 });

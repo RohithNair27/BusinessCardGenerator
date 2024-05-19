@@ -7,7 +7,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {checkLoginStatus} from '../Firebase/FirebaseAuth';
 import {userContext} from '../Context/QRdataContext';
 import AppDrawer from './DrawerNavigation';
-import CameraQR from '../Screens/camera';
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const {loggedin, setLoggedin, loginData, setLoginData} =
