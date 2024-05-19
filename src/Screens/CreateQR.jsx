@@ -3,27 +3,34 @@ import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import {useIsFocused} from '@react-navigation/native';
-import QRcode from '../Components/ui/QRcode';
 import QRModal from '../Components/QRModal';
 import Snackbar from '../Components/ui/Snackbar';
 import {CommonContext} from '../Context/commonContext/CommonContext';
+import Radiobutton from '../Components/ui/Radiobutton';
 import {
   EmailValidation,
   isEmptyString,
   isPersonalWebsite,
   isValidPhoneNumber,
 } from '../Utils/validation';
-const CreateQR = () => {
+import {storeDataLocally} from '../Utils/AsyncStorage';
+import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
+const CreateQR = ({navigation}) => {
   const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
     useContext(CommonContext);
+  const {addData, termsAgreed, setTermsAgreed} =
+    useContext(PersonalDataContext);
   const isFocused = useIsFocused();
   const [showQRcode, setshowQrCode] = useState(false);
+  const [page, setPage] = useState(1);
   const [personData, setPersonData] = useState({
     username: {
-      name: 'Your name',
+      name: 'Enter your full name',
       value: '',
       placeHolder: 'ex :- Elon musk',
       maxLength: 20,
+      page: 1,
+      compulsory: true,
     },
     number: {
       name: 'Your number',
@@ -31,12 +38,16 @@ const CreateQR = () => {
       keyBoardType: 'tel',
       maxLength: 10,
       placeHolder: 'ex :- 9234******',
+      page: 1,
+      compulsory: true,
     },
     company_name: {
       name: 'Your company name',
       value: '',
       placeHolder: 'ex :- Google',
       maxLength: 30,
+      page: 1,
+      compulsory: true,
     },
     Email: {
       name: 'Enter your email',
@@ -44,35 +55,44 @@ const CreateQR = () => {
       keyBoardType: 'email',
       placeHolder: 'ex :- yourname@gmail.com',
       maxLength: 50,
+      page: 1,
+      compulsory: true,
     },
-    website: {
-      name: 'Enter your website',
+    Country: {
+      name: 'Country Origin',
       value: '',
-      placeHolder: 'ex :- yourwebsite.dev',
-      maxLength: 30,
-    },
-    city: {
-      name: 'Enter your city',
-      value: '',
-      placeHolder: 'ex :- New York',
+      keyBoardType: 'email',
+      placeHolder: 'ex :- England',
       maxLength: 50,
+      page: 2,
+      compulsory: false,
+    },
+    Profession: {
+      name: 'Profession',
+      value: '',
+      keyBoardType: 'email',
+      placeHolder: 'ex :- Product manager',
+      maxLength: 50,
+      page: 2,
+      compulsory: true,
     },
   });
   const [qrData, setQrData] = useState();
-  const onPressCreateQrCode = async () => {
-    const validated_name = personData.username.value.trimEnd();
-    const validated_number = personData.number.value.trimEnd();
-    const validated_company_name = personData.company_name.value.trimEnd();
-    const validated_email = personData.Email.value.trimEnd();
-    const validated_website = personData.website.name.trimEnd();
-    const validated_city = personData.city.name.trimEnd();
 
-    const isNameValid = isEmptyString(validated_name);
-    const isNumberValid = isValidPhoneNumber(validated_number);
-    const isCompanyNameValid = isEmptyString(validated_company_name);
-    const isEmail = EmailValidation(validated_email);
-    // const isWebsite = isPersonalWebsite(validated_website);
-    const isCityValid = isEmptyString(validated_city);
+  //handle validation
+  const onPressStoreDataLocal = async () => {
+    const name = personData.username.value.trimEnd();
+    const number = personData.number.value.trimEnd();
+    const company_name = personData.company_name.value.trimEnd();
+    const email = personData.Email.value.trimEnd();
+    const profession = personData.Profession.value.trimEnd();
+    const Country = personData.Country.value.trimEnd();
+
+    const isNameValid = isEmptyString(name);
+    const isNumberValid = isValidPhoneNumber(number);
+    const isCompanyNameValid = isEmptyString(company_name);
+    const isProfessionValid = isEmptyString(profession);
+    const isEmail = EmailValidation(email);
 
     if (isNameValid !== true) {
       showErrorMessage(isNameValid.messsage);
@@ -93,45 +113,101 @@ const CreateQR = () => {
       return;
     }
 
-    if (isCityValid !== true) {
-      showErrorMessage(isCityValid.messsage);
+    if (isProfessionValid !== true) {
+      showErrorMessage(isProfessionValid.messsage);
+      return;
+    }
+    if (termsAgreed !== true) {
+      showErrorMessage('Kindly accept the terms');
       return;
     }
     setQrData({
-      name: validated_name,
-      number: validated_number,
-      company_name: validated_company_name,
-      email: validated_email,
-      website: validated_website,
-      city: validated_city,
+      name: name,
+      number: number,
+      company_name: company_name,
+      email: email,
+      city: Country,
+      profession: profession,
+      terms: termsAgreed,
     });
-    onPressCreateQr();
+
+    navigation.navigate('Home');
   };
   const showErrorMessage = message => {
     showHideSnackBar(true);
     changeErrorMessage(message);
   };
+
+  //updating the onChange using the key
   const onChageText = (key, text) => {
     setPersonData({
       ...personData,
       [key]: {...personData[key], value: text},
     });
   };
-  function onPressCreateQr() {
-    setshowQrCode(!showQRcode);
+
+  //handle terms
+  const handleOptionSelect = () => {
+    console.log(termsAgreed);
+    setTermsAgreed(!termsAgreed);
+    navigation.navigate('Terms');
+  };
+
+  //change page
+  function onPressNextPage(pageChange) {
+    if (pageChange) {
+      setPage(page + 1);
+    } else {
+      setPage(page - 1);
+    }
   }
+
+  useEffect(() => {
+    setPage(1);
+  }, [isFocused]);
+
+  const addDataToLocal = async () => {
+    const result = await storeDataLocally(personData.Email.value, qrData);
+    if (result) {
+      addData([qrData]);
+    } else {
+      console.log('added before not added now');
+    }
+  };
+
+  useEffect(() => {
+    if (personData.Email.value !== '') {
+      addDataToLocal();
+    }
+  }, [qrData]);
 
   return (
     <View style={styles.body}>
-      {showQRcode ? <QRModal onClick={onPressCreateQr} data={qrData} /> : null}
       {snackBarDisplay && <Snackbar error={snackBarError} />}
-      {/* <Text style={styles.HeadingText}>Data for QR</Text> */}
-      <ScrollView style={{width: '90%', height: '100%'}}>
-        <Text style={{...styles.HeadingText, color: '#636EAB'}}>
-          Create a QR!
+      <View style={styles.topFields}>
+        <Text style={styles.headerText}>Add your details</Text>
+        <Text
+          style={{
+            ...styles.headerText,
+            fontSize: 15,
+            fontWeight: '400',
+            paddingBottom: 26,
+          }}>
+          *This data will be stored in this device*
         </Text>
-        <View style={styles.inputBody}>
-          {Object.keys(personData).map(keys => {
+      </View>
+      <View
+        style={{
+          width: '85%',
+          height: '60%',
+          marginTop: 5,
+          justifyContent: 'center',
+        }}>
+        {Object.keys(personData)
+          .filter(element => {
+            return personData[element].page === page;
+          })
+          .map(keys => {
             return (
               <View key={keys} style={styles.eachInput}>
                 <InputField
@@ -142,22 +218,65 @@ const CreateQR = () => {
                   onValueChange={onChageText}
                   keyBoardType={personData[keys].keyBoardType}
                   borderColor={'#636EAB'}
-                  compulsory={true}
+                  compulsory={personData[keys].compulsory}
                   maxLength={personData[keys].maxLength}
+                  paddingLeft="5%"
                 />
               </View>
             );
           })}
+        {page === 2 ? (
+          <>
+            <Radiobutton terms={termsAgreed} onClick={handleOptionSelect} />
+          </>
+        ) : null}
+      </View>
+      {page === 1 ? (
+        <View
+          style={{
+            width: '85%',
+            height: '10%',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}>
           <Button
-            placeHolder={'Create QR'}
-            backgroundColor={'#636EAB'}
-            width={'70%'}
-            height={'20%'}
+            placeHolder={'-->'}
+            backgroundColor={'#FF7377'}
+            width={'20%'}
+            height={'90%'}
             textColor={'#fff'}
-            onPress={() => onPressCreateQrCode()}
+            onPress={() => onPressNextPage(true)}
           />
         </View>
-      </ScrollView>
+      ) : (
+        <View
+          style={{
+            // borderWidth: 1,
+            width: '85%',
+            height: '10%',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}>
+          <Button
+            placeHolder={'<--'}
+            backgroundColor={'#FF7377'}
+            width={'20%'}
+            height={'90%'}
+            textColor={'#fff'}
+            onPress={() => onPressNextPage(false)}
+          />
+          <Button
+            placeHolder={'Store data'}
+            backgroundColor={'#FF7377'}
+            width={'60%'}
+            height={'90%'}
+            textColor={'#fff'}
+            onPress={() => onPressStoreDataLocal()}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -167,21 +286,30 @@ export default CreateQR;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+
     backgroundColor: '#DBE9FF',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
-    padding: '6%',
   },
-  HeadingText: {
-    fontSize: 35,
-    fontWeight: '700',
-    fontFamily: 'DM Sans',
-    textAlign: 'center',
-  },
-  inputBody: {
-    // borderWidth: 1,
+  topFields: {
+    backgroundColor: '#103550',
+    height: '25%',
     width: '100%',
-    alignSelf: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 30,
+  },
+  headerText: {
+    fontSize: 30,
+    color: '#ffff',
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
+
+  inputBody: {
+    borderWidth: 1,
+    overflow: 'visible',
+  },
+  eachInput: {
+    marginBottom: 20,
   },
 });

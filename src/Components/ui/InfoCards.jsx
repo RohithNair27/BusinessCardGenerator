@@ -6,22 +6,25 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import Office from '../../Assets/Images/office.svg';
+
 import React from 'react';
 
-const InfoCards = ({item}) => {
+const InfoCards = ({item, onClick}) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        onClick();
+      }}>
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.headerText}>ID card</Text>
         </View>
         <View style={styles.content}>
-          {/* <Office /> */}
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.position}>Software Engineer</Text>
-            <Text style={styles.idNumber}>Tel: {item.tel}</Text>
+            <Text style={styles.idNumber}>Tel: {item.number}</Text>
           </View>
         </View>
       </View>

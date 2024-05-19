@@ -1,204 +1,85 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  TouchableOpacity,
-  Dimensions,
-  PermissionsAndroid,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useState, useContext} from 'react';
-import {userContext} from '../Context/QRdataContext';
-import {CommonContext} from '../Context/commonContext/CommonContext';
-import QRcode from '../Components/ui/QRcode';
-import {launchCamera} from 'react-native-image-picker';
-import Idcard from '../Assets/Images/id-card.svg';
-import Qr from '../Assets/Images/qrsvg.svg';
+import {StyleSheet, Text, View, StatusBar, Dimensions} from 'react-native';
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import InfoCards from '../Components/ui/InfoCards';
 import {MasonryFlashList} from '@shopify/flash-list';
-import {getDataLocally} from '../Utils/AsyncStorage';
+import InputField from '../Components/ui/InputField';
+import {readAsyncData} from '../Utils/AsyncStorage';
+import Loader from '../Components/ui/Loader';
+import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
+import {userContext} from '../Context/QRdataContext';
+import {useIsFocused} from '@react-navigation/native';
+import QRModal from '../Components/QRModal';
+const Home = ({navigation, route}) => {
+  const {isLoading, changeLoading} = useContext(userContext);
+  const {peopleData, addData} = useContext(PersonalDataContext);
+  const [text, setText] = useState('');
+  const [modalStatus, setModalStatus] = useState(false);
+  const isInitialRender = useRef(true);
+  const isFocused = useIsFocused();
 
-const Home = ({navigation}) => {
-  const HEIGHT = Dimensions.get('window').height;
-  const {loginData} = useContext(userContext);
-
-  const data = [
-    {
-      no: 1,
-      name: 'Imogene Barrows',
-      age: 56,
-      tel: '+1-287-229-7009',
-      email: 'schmeler.laurie@cummings.biz',
-    },
-    {
-      no: 2,
-      name: 'Delilah Haley',
-      age: 32,
-      tel: '1-737-346-9860',
-      email: 'rmoore@luettgen.com',
-    },
-    {
-      no: 3,
-      name: 'Terence Simonis',
-      age: 35,
-      tel: '624-848-9816 x446',
-      email: 'bogan.jerry@wuckert.com',
-    },
-    {
-      no: 4,
-      name: 'Darrin Boehm',
-      age: 20,
-      tel: '578.973.9835 x271',
-      email: 'marquardt.brant@hotmail.com',
-    },
-    {
-      no: 5,
-      name: 'Tyrique Krajcik',
-      age: 21,
-      tel: '627-797-5470 x2770',
-      email: 'heathcote.eldon@goodwin.com',
-    },
-    {
-      no: 5,
-      name: 'Tyrique Krajcik',
-      age: 21,
-      tel: '627-797-5470 x2770',
-      email: 'heathcote.eldon@goodwin.com',
-    },
-    {
-      no: 5,
-      name: 'Tyrique Krajcik',
-      age: 21,
-      tel: '627-797-5470 x2770',
-      email: 'heathcote.eldon@goodwin.com',
-    },
-    {
-      no: 5,
-      name: 'Tyrique Krajcik',
-      age: 21,
-      tel: '627-797-5470 x2770',
-      email: 'heathcote.eldon@goodwin.com',
-    },
-    {
-      no: 5,
-      name: 'Tyrique Krajcik',
-      age: 21,
-      tel: '627-797-5470 x2770',
-      email: 'heathcote.eldon@goodwin.com',
-    },
-  ];
-
-  const onPressQrButton = () => {
-    SetQrVisible(!qrVisible);
+  //this function is called when the app loads for first time
+  const fetchDataFromLocal = async () => {
+    const data = await readAsyncData();
+    addData(data);
   };
 
-  //QR visisble on modal change
-  const dataForQRCreation = () => {
-    const qrData = JSON.stringify(personData);
-
-    return <QRcode value={qrData} logo={logo} />;
+  const onChangeText = (key, texts) => {
+    setText(texts);
   };
 
-  // adding user to the list
-  const onSaveUser = () => {
-    if (profilePictureUri) {
-      addUsers({...personData, profilePic: profilePictureUri});
-    } else {
-      addUsers(personData);
+  const onPressForModal = () => {
+    setModalStatus(!modalStatus);
+    // console.log(modalStatus);
+  };
+
+  //this user effect will fatch the data at the new call
+  useEffect(() => {
+    if (isInitialRender.current) {
+      fetchDataFromLocal();
+      isInitialRender.current = false;
     }
-    // console.log(usersAdded);
-  };
+  }, []);
 
-  // handleClear buttons
-  const onClickClear = () => {
-    setPersonData({
-      name: {title: 'Name', value: ''},
-      number: {title: '74104 10123', value: ''},
-      company_name: {title: 'Company Name', value: ''},
-      Email: {title: 'Email', value: ''},
-      website: {title: 'Website', value: ''},
-      city: {title: 'City', value: ''},
-    });
-    SetQrVisible(false);
-    setProfilePictureUri(false);
-  };
-
-  //permission for android
-  const getMobilePermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-        getProfilePictureDevice();
-      } else {
-        console.log('Camera permission denied');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //This is used to take image from camera
-  const getProfilePictureDevice = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-    launchCamera(options, response => {
-      if (response.didCancel) {
-        console.log('image not picked');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
-      } else {
-        let imageUri = response.assets?.[0]?.uri;
-        console.log(imageUri);
-        setProfilePictureUri(imageUri);
-      }
-    });
-  };
-
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <View style={styles.body}>
       <StatusBar backgroundColor={'#103550'} />
 
+      <QRModal onClick={onPressForModal} status={modalStatus} />
+
       <View style={styles.topFields}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Hello {loginData?.displayName}</Text>
-          <Text style={{...styles.headerText, fontSize: 20}}>
-            Who you want to meet today?
-          </Text>
-        </View>
-        <View style={styles.navigateCard}>
-          <TouchableOpacity
-            style={styles.navigateEachCard}
-            onPress={() => {
-              navigation.navigate('New Card');
-            }}>
-            <Idcard style={styles.navigationImage} height={'60%'} />
-            <Text>New Card</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigateEachCard}
-            onPress={() => {
-              navigation.navigate('Scan');
-            }}>
-            <Qr style={styles.navigationImage} height={'60%'} width={'30%'} />
-            <Text>Scan</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerText}>Good day</Text>
+        <Text
+          style={{
+            ...styles.headerText,
+            fontSize: 15,
+            fontWeight: '400',
+            paddingBottom: 26,
+          }}>
+          Unlock new doors, forge lasting ties
+        </Text>
+        <InputField
+          width={'92%'}
+          compulsory={false}
+          height={'24%'}
+          placeHolder={'search with name'}
+          icon={'search'}
+          onValueChange={onChangeText}
+          value={text}
+          keyProps={'no user'}
+          paddingLeft="7%"
+        />
       </View>
       <View style={styles.inputBody}>
         <MasonryFlashList
-          renderItem={({item}) => {
-            return <InfoCards item={item} />;
-          }}
+          renderItem={({item}) => (
+            <InfoCards item={item} onClick={onPressForModal} />
+          )}
           estimatedItemSize={50}
-          data={data}
+          data={peopleData.filter(element => {
+            return element.name.includes(text);
+          })}
           numColumns={2}
         />
       </View>
@@ -219,28 +100,34 @@ const styles = StyleSheet.create({
   },
   topFields: {
     backgroundColor: '#103550',
-    // borderWidth: 1,
-    height: HEIGHT * 0.3,
+    flex: 0.5,
     width: '100%',
+    // borderBottomEndRadius: 15,
+    // borderBottomStartRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 30,
   },
   header: {
     top: '10%',
     left: '10%',
-    borderColor: 'black',
+    // borderColor: 'black',
   },
   headerText: {
-    fontSize: 40,
+    fontSize: 30,
     color: '#ffff',
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
   },
   navigateCard: {
-    position: 'absolute',
-    top: HEIGHT * 0.25,
+    // position: 'absolute',
+    // top: HEIGHT * 0.25,
     right: '5%',
     width: '60%',
     flexDirection: 'row',
     height: '35%',
     justifyContent: 'space-evenly',
-    zIndex: 1,
+    borderWidth: 1,
   },
   navigateEachCard: {
     justifyContent: 'center',
@@ -263,12 +150,12 @@ const styles = StyleSheet.create({
     height: '20%',
   },
   inputBody: {
-    paddingTop: '10%',
-    // borderWidth: 1,
-    height: HEIGHT * 0.48,
+    paddingTop: '2%',
+    flex: 1,
+    // height: HEIGHT * 0.45,
     width: '100%',
-
-    top: HEIGHT * 0.06,
+    // top: HEIGHT * 0.06,
+    // borderWidth: 1,
   },
   buttonContainer: {
     // borderWidth: 1,

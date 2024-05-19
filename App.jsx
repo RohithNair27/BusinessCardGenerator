@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/Navigation/StackNavigation';
 import CommonContextProvider from './src/Context/commonContext/CommonContextProvider';
 import QRcontextProvider from './src/Context/QRcontextProvider';
-import PersonalContextProvider from './src/Context/PersonalDataContext/PersonalContextProvider';
+import PersonalContextProvider from './src/Context/PersonalDataContext/DetailsDataProvider';
 import AppDrawer from './src/Navigation/DrawerNavigation';
 
 function App() {

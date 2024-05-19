@@ -35,7 +35,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="New Card"
+        name="New_Card"
         component={CreateQR}
         options={{
           tabBarShowLabel: false,

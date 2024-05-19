@@ -36,18 +36,25 @@ const AppDrawerItem = props => {
       </View>
       <DrawerContentScrollView>
         <DrawerItemList {...props} />
-
         <DrawerItem
           icon={() => {
             return <MaterialCommunityIcons size={24} name={'logout'} />;
           }}
+          labelStyle={{color: 'black'}}
           label="Logout"
           onPress={() => console.log('FIRE CUSTOM LOGOUT FUNCTION')}
         />
         <DrawerItem
-          icon={() => {
-            return <MaterialCommunityIcons size={24} name={'star'} />;
+          icon={({focused, color}) => {
+            return (
+              <MaterialCommunityIcons
+                size={24}
+                name={'star'}
+                color={focused ? '#103550' : 'black'}
+              />
+            );
           }}
+          labelStyle={{color: 'black'}}
           label="Rate us"
           onPress={() => handlePress()}
         />
@@ -62,9 +69,9 @@ const AppDrawerItem = props => {
 
 const styles = StyleSheet.create({
   drawerHeader: {
-    paddingLeft: 10,
-    height: 150,
+    height: 170,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   drawerHeaderText: {
     color: '#103550',
@@ -73,7 +80,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   footer: {
+    borderColor: 'lightgray',
     position: 'absolute',
+
     bottom: 10,
     alignSelf: 'center',
   },
