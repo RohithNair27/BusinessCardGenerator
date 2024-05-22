@@ -14,17 +14,33 @@ const InfoCards = ({item, onClick}) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        onClick();
+        onClick(item);
       }}>
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.headerText}>ID card</Text>
         </View>
         <View style={styles.content}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.position}>Software Engineer</Text>
-            <Text style={styles.idNumber}>Tel: {item.number}</Text>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.name} numberOfLines={2} ellipsizeMode="tail">
+              {item.name}
+            </Text>
+            <Text
+              style={styles.position}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {item.profession}
+            </Text>
+            <Text
+              style={styles.idNumber}
+              numberOfLines={2}
+              ellipsizeMode="tail">
+              Tel: {item.number}
+            </Text>
           </View>
         </View>
       </View>
@@ -44,7 +60,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '85%',
-    height: '95%',
+    height: 140,
     backgroundColor: '#ffffff',
     borderRadius: 10,
     shadowColor: '#000000',
@@ -77,6 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'center',
   },
   position: {
     fontSize: 14,

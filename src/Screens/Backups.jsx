@@ -11,18 +11,17 @@ const Backups = () => {
       <View style={styles.buttonHolder}>
         <Button
           placeHolder={'Upload backup'}
-          backgroundColor={'#636EAB'}
+          backgroundColor={'#FF7377'}
           width={'100%'}
-          height={'30%'}
+          height={'25%'}
           textColor={'#fff'}
         />
         <Button
           placeHolder={'Import your data'}
-          // backgroundColor={'#636EAB'}
           width={'100%'}
-          height={'30%'}
-          textColor={'#636EAB'}
-          bordercolor={'#636EAB'}
+          height={'25%'}
+          textColor={'#FF7377'}
+          bordercolor={'#FF7377'}
         />
       </View>
       <Text>All the data will be updated on our server</Text>

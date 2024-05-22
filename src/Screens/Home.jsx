@@ -9,12 +9,14 @@ import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataCon
 import {userContext} from '../Context/QRdataContext';
 import {useIsFocused} from '@react-navigation/native';
 import QRModal from '../Components/QRModal';
+
 const Home = ({navigation, route}) => {
   const {isLoading, changeLoading} = useContext(userContext);
   const {peopleData, addData} = useContext(PersonalDataContext);
   const [text, setText] = useState('');
   const [modalStatus, setModalStatus] = useState(false);
   const isInitialRender = useRef(true);
+  const [currentModalData, setCurrentModalData] = useState();
   const isFocused = useIsFocused();
 
   //this function is called when the app loads for first time
@@ -27,9 +29,9 @@ const Home = ({navigation, route}) => {
     setText(texts);
   };
 
-  const onPressForModal = () => {
+  const onPressForModal = item => {
     setModalStatus(!modalStatus);
-    // console.log(modalStatus);
+    setCurrentModalData(item);
   };
 
   //this user effect will fatch the data at the new call
@@ -46,7 +48,11 @@ const Home = ({navigation, route}) => {
     <View style={styles.body}>
       <StatusBar backgroundColor={'#103550'} />
 
-      <QRModal onClick={onPressForModal} status={modalStatus} />
+      <QRModal
+        onClick={onPressForModal}
+        status={modalStatus}
+        data={currentModalData}
+      />
 
       <View style={styles.topFields}>
         <Text style={styles.headerText}>Good day</Text>
@@ -102,8 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#103550',
     flex: 0.5,
     width: '100%',
-    // borderBottomEndRadius: 15,
-    // borderBottomStartRadius: 15,
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingLeft: 30,
