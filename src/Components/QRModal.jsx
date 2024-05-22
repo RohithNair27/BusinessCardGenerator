@@ -1,88 +1,104 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-  StatusBar,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+import {StyleSheet, Text, View, StatusBar, Modal, Image} from 'react-native';
 import React, {useContext} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import {storeDataLocally} from '../Utils/AsyncStorage';
-import Profile_image from '../Assets/Images/profile_drawer.svg';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import QRcode from './ui/QRcode';
+import youngman from '../Assets/Images/youngman.png';
+import Button from './ui/Button';
 
 const QRModal = ({onClick, data, status}) => {
   const isFocused = useIsFocused();
-
+  console.log(data);
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={status}
       useNativeDriver={true}
-      onRequestClose={onClick}>
-      {isFocused ? (
-        <StatusBar backgroundColor={'rgba(52, 52, 52, 0.8)'} />
-      ) : null}
+      onRequestClose={onClick}
+      animationIn={'slideInUp'}
+      animationOut={'slideOutDown'}>
+      {isFocused ? <StatusBar backgroundColor={'white'} /> : null}
 
       <View style={styles.centeredView}>
         <View style={styles.qrview}>
-          <View style={styles.closeQr}>
-            <Text
-              style={{fontWeight: 'bold', fontSize: 20}}
-              onPress={() => onClick()}>
-              X
-            </Text>
-          </View>
           <View style={styles.idCard}>
             <View style={styles.header}>
-              <Text style={{fontWeight: 'bold', fontSize: 30, color: 'white'}}>
-                Bizz ID card
-              </Text>
-            </View>
-            <View style={styles.body}>
-              <View style={styles.textContainer}>
-                <Text style={styles.name}>Rohith Nair</Text>
-                {/* <Text style={styles.value}>Software developer</Text> */}
-                <View style={styles.idContainer}>
-                  <Text style={styles.label}>Company name</Text>
-                  <Text style={styles.value}>Capgemini</Text>
+              <Image
+                source={youngman}
+                style={{
+                  // borderWidth: 1,
+                  width: '30%',
+                  height: '70%',
+                  borderWidth: 10,
+                  padding: 20,
+                  borderRadius: 15,
+                }}
+              />
+              <View style={styles.headerTextContainer}>
+                <View>
+                  <Text style={{...styles.label, color: 'black'}}>
+                    Fullname
+                  </Text>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={{
+                      fontSize: 20,
+                      color: 'white',
+                      fontWeight: 'bold',
+                    }}>
+                    {data?.name}
+                  </Text>
                 </View>
-                <View style={styles.idContainer}>
-                  <Text style={styles.label}>Connected on</Text>
-                  <Text style={styles.value}>19th May 2020</Text>
-                </View>
-
-                <View style={{flexDirection: 'row'}}>
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(`tel:${93902000}`)}>
-                    <Ionicons
-                      name="call"
-                      size={30}
-                      color={'black'}
-                      // style={{marginLeft: 10}}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL('mailto:support@example.com')
-                    }>
-                    <Ionicons
-                      name="mail"
-                      size={30}
-                      color={'black'}
-                      style={{marginLeft: 10}}
-                    />
-                  </TouchableOpacity>
+                <View>
+                  <Text style={[styles.label, {color: 'black'}]}>Position</Text>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={{fontSize: 20, color: 'white', fontWeight: 'bold'}}>
+                    {data?.profession}
+                  </Text>
                 </View>
               </View>
-              <Profile_image />
+            </View>
+            <View style={styles.body}>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>Company name</Text>
+                <Text style={styles.value}>{data?.company_name}</Text>
+              </View>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>Position</Text>
+                <Text style={styles.value}>Senior Software Engineer</Text>
+              </View>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>Phone NO.</Text>
+                <Text style={styles.value}>{data?.number}</Text>
+              </View>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>E-mail</Text>
+                <Text style={styles.value}>{data?.email}</Text>
+              </View>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>Country</Text>
+                <Text style={styles.value}>{data?.city}</Text>
+              </View>
+              <View style={[styles.id]}>
+                <Text style={styles.label}>Connected Date</Text>
+                <Text style={[styles.value, {color: 'rgb(61,190,139)'}]}>
+                  {data?.Time}
+                </Text>
+              </View>
             </View>
             <View style={styles.footer}>
-              <QRcode size={90} peronsalInfo={data} />
+              <QRcode size={150} peronsalInfo={data} />
+              <Button
+                placeHolder={'Close'}
+                backgroundColor={'#FF7377'}
+                width={'70%'}
+                height={'15%'}
+                textColor={'#fff'}
+                onPress={() => onClick()}
+              />
             </View>
           </View>
         </View>
@@ -102,52 +118,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   qrview: {
-    position: 'absolute',
-    borderRadius: 30,
-    alignItems: 'center',
+    flex: 1,
+    paddingTop: 40,
     backgroundColor: 'white',
     width: '100%',
-    height: '85%',
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeQr: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // borderWidth: 1,
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: 'lightgray',
-  },
-  header: {
-    flex: 0.3,
-    width: '100%',
-    backgroundColor: '#103550',
-    padding: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  body: {
-    flex: 1.5,
-    // borderWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    backgroundColor: '#DBE9FF',
+    height: '100%',
   },
   idCard: {
-    // borderWidth: 1,
-    width: '80%',
-    height: '70%',
+    flex: 1,
+    width: '100%',
     borderRadius: 10,
   },
+  header: {
+    flex: 1.6,
+    borderRadius: 15,
+    width: '90%',
+    backgroundColor: '#FF7377',
+    padding: 10,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+  },
+  headerTextContainer: {
+    // borderWidth: 1,
+    maxWidth: '60%',
+    maxHeight: '100%',
+    paddingLeft: 10,
+  },
+  body: {
+    flex: 2,
+    width: '95%',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    alignSelf: 'center',
+    paddingLeft: 10,
+    // borderWidth: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+
   name: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -160,22 +170,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   idContainer: {
-    // flexDirection: 'row',
-    // alignItems: 'center',
+    flexDirection: 'row',
+  },
+  value: {
+    marginRight: 8,
+    fontWeight: '500',
+    fontSize: 15,
+    marginBottom: 20,
   },
   label: {
-    marginRight: 8,
-    fontWeight: 'bold',
+    marginTop: 20,
+    color: 'lightgray',
   },
 
   footer: {
-    width: '100%',
-    // borderWidth: 1,
-    flex: 1,
+    flex: 3,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#103550',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    justifyContent: 'space-evenly',
+  },
+
+  id: {
+    // borderWidth: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    width: '45%',
+    height: '40%',
   },
 });

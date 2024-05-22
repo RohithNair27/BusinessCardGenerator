@@ -3,18 +3,17 @@ import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import {useIsFocused} from '@react-navigation/native';
-import QRModal from '../Components/QRModal';
 import Snackbar from '../Components/ui/Snackbar';
 import {CommonContext} from '../Context/commonContext/CommonContext';
 import Radiobutton from '../Components/ui/Radiobutton';
 import {
   EmailValidation,
   isEmptyString,
-  isPersonalWebsite,
   isValidPhoneNumber,
 } from '../Utils/validation';
 import {storeDataLocally} from '../Utils/AsyncStorage';
 import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
+import {getCurrentDateFormatted} from '../Utils/CurrentDate';
 const CreateQR = ({navigation}) => {
   const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
     useContext(CommonContext);
@@ -61,7 +60,6 @@ const CreateQR = ({navigation}) => {
     Country: {
       name: 'Country Origin',
       value: '',
-      keyBoardType: 'email',
       placeHolder: 'ex :- England',
       maxLength: 50,
       page: 2,
@@ -70,7 +68,6 @@ const CreateQR = ({navigation}) => {
     Profession: {
       name: 'Profession',
       value: '',
-      keyBoardType: 'email',
       placeHolder: 'ex :- Product manager',
       maxLength: 50,
       page: 2,
@@ -87,6 +84,7 @@ const CreateQR = ({navigation}) => {
     const email = personData.Email.value.trimEnd();
     const profession = personData.Profession.value.trimEnd();
     const Country = personData.Country.value.trimEnd();
+    const CurrentTime = getCurrentDateFormatted();
 
     const isNameValid = isEmptyString(name);
     const isNumberValid = isValidPhoneNumber(number);
@@ -129,6 +127,7 @@ const CreateQR = ({navigation}) => {
       city: Country,
       profession: profession,
       terms: termsAgreed,
+      Time: CurrentTime,
     });
 
     navigation.navigate('Home');
