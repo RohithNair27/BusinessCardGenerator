@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, StatusBar, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  ScrollView,
+  PermissionsAndroid,
+} from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
@@ -14,11 +21,22 @@ import {
 import {storeDataLocally} from '../Utils/AsyncStorage';
 import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
 import {getCurrentDateFormatted} from '../Utils/CurrentDate';
+import InfoModal from '../Components/ui/InfoModal';
+import {getMobilePermission} from '../Utils/Camera';
+import {userContext} from '../Context/QRdataContext';
 const CreateQR = ({navigation}) => {
   const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
     useContext(CommonContext);
   const {addData, termsAgreed, setTermsAgreed} =
     useContext(PersonalDataContext);
+  const {
+    loggedin,
+    setLoggedin,
+    loginData,
+    setLoginData,
+    isSignIn,
+    changeSignIn,
+  } = useContext(userContext);
   const isFocused = useIsFocused();
   const [showQRcode, setshowQrCode] = useState(false);
   const [page, setPage] = useState(1);
@@ -119,6 +137,7 @@ const CreateQR = ({navigation}) => {
       showErrorMessage('Kindly accept the terms');
       return;
     }
+
     setQrData({
       name: name,
       number: number,
@@ -164,6 +183,7 @@ const CreateQR = ({navigation}) => {
   useEffect(() => {
     setPage(1);
   }, [isFocused]);
+  // useEffect(() => {}, [isSignIn]);
 
   const addDataToLocal = async () => {
     const result = await storeDataLocally(personData.Email.value, qrData);
@@ -172,6 +192,10 @@ const CreateQR = ({navigation}) => {
     } else {
       console.log('added before not added now');
     }
+  };
+  const onPressCaptureImage = async () => {
+    let uri = await getMobilePermission();
+    console.log(uri, 'uri');
   };
 
   useEffect(() => {
@@ -183,6 +207,8 @@ const CreateQR = ({navigation}) => {
   return (
     <View style={styles.body}>
       {snackBarDisplay && <Snackbar error={snackBarError} />}
+      {console.log(isSignIn, 'in qr')}
+      {isSignIn && <InfoModal />}
       <View style={styles.topFields}>
         <Text style={styles.headerText}>Add your details</Text>
         <Text
@@ -198,9 +224,10 @@ const CreateQR = ({navigation}) => {
       <View
         style={{
           width: '85%',
-          height: '60%',
+          height: '63%',
           marginTop: 5,
           justifyContent: 'center',
+          // borderWidth: 1,
         }}>
         {Object.keys(personData)
           .filter(element => {
@@ -234,16 +261,24 @@ const CreateQR = ({navigation}) => {
         <View
           style={{
             width: '85%',
-            height: '10%',
+            height: '8%',
             flexDirection: 'row',
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}>
+          {/* <Button
+            placeHolder={'Capture Image'}
+            backgroundColor={'#FF7377'}
+            width={'60%'}
+            height={'90%'}
+            textColor={'#fff'}
+            onPress={() => onPressCaptureImage()}
+          /> */}
           <Button
             placeHolder={'-->'}
             backgroundColor={'#FF7377'}
-            width={'20%'}
-            height={'90%'}
+            width={'17%'}
+            height={'100%'}
             textColor={'#fff'}
             onPress={() => onPressNextPage(true)}
           />

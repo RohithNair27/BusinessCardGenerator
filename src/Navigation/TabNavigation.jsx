@@ -1,14 +1,18 @@
 import React, {useContext} from 'react';
 import Home from '../Screens/Home';
-
+import VisionCamera from '../Screens/VisionCamera';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateQR from '../Screens/CreateQR';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CameraQR from '../Screens/camera';
+import InfoModal from '../Components/ui/InfoModal';
+import {userContext} from '../Context/QRdataContext';
 const TabNavigator = () => {
+  //isSignIn,changeSignIn,
+  const {isSignIn, changeSignIn} = useContext(userContext);
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
+      initialRouteName={isSignIn ? 'New_Card' : 'Home'}
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -28,7 +32,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Ionicons
               name="home-outline"
-              size={20}
+              size={26}
               color={focused ? '#103550' : 'gray'}
             />
           ),
@@ -42,7 +46,7 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <Ionicons
               name="id-card-outline"
-              size={20}
+              size={26}
               color={focused ? '#103550' : 'gray'}
             />
           ),
@@ -50,13 +54,14 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Scan"
-        component={CameraQR}
+        component={VisionCamera}
+        initialParams={{mode: false}}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused}) => (
             <Ionicons
               name="scan-sharp"
-              size={20}
+              size={26}
               color={focused ? '#103550' : 'gray'}
             />
           ),

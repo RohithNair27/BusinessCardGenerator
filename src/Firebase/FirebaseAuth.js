@@ -53,3 +53,20 @@ export const checkLoginStatus = () => {
     );
   });
 };
+
+export const updatePersonalProfilePicture = async () => {
+  const profile = {
+    displayName: 'Alias',
+    photoURL:
+      '//images.ctfassets.net/yadj1kx9rmg0/wtrHxeu3zEoEce2MokCSi/cf6f68efdcf625fdc060607df0f3baef/quwowooybuqbl6ntboz3.jpg',
+  };
+
+  const result = await auth().currentUser.updateProfile(profile);
+  console.log(result);
+};
+
+export const logoutPress = () => {
+  auth()
+    .signOut()
+    .then(() => console.log('User signed out!'));
+};

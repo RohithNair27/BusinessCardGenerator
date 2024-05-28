@@ -30,6 +30,7 @@ const LoginPage = ({navigation}) => {
   });
 
   const onChageText = (key, text) => {
+    console.log(text);
     setLoginData({
       ...loginData,
       [key]: {...loginData[key], value: text},
@@ -86,24 +87,36 @@ const LoginPage = ({navigation}) => {
         Let's connect with the world
       </Text>
       <View style={styles.bottomBody}>
-        <InputField
-          height={'13%'}
-          width={'100%'}
-          placeholderAbove={'Email id'}
-          value={loginData.Email_id.value}
-          keyProps={loginData.Email_id.name}
-          onValueChange={onChageText}
-          secureTextEntry={false}
-        />
-        <InputField
-          height={'13%'}
-          width={'100%'}
-          placeholderAbove={'Password'}
-          value={loginData.Password.value}
-          keyProps={loginData.Password.name}
-          onValueChange={onChageText}
-          secureTextEntry={true}
-        />
+        <View style={styles.eachInput}>
+          <InputField
+            placeholderAbove={'Email'}
+            value={loginData.Email_id.value}
+            keyProps={loginData.Email_id.name}
+            onValueChange={onChageText}
+            placeHolder={'ex - youremail@gmail.com'}
+            keyBoardType={'text'}
+            borderColor={'#636EAB'}
+            compulsory={false}
+            maxLength={50}
+            paddingLeft="5%"
+            secureTextEntry={false}
+          />
+        </View>
+        <View style={styles.eachInput}>
+          <InputField
+            placeholderAbove={'password'}
+            placeHolder={'password'}
+            value={loginData.Password.value}
+            onValueChange={onChageText}
+            keyProps={loginData.Password.name}
+            keyBoardType={'text'}
+            borderColor={'#636EAB'}
+            compulsory={false}
+            maxLength={50}
+            paddingLeft="10%"
+            secureTextEntry={true}
+          />
+        </View>
 
         <Button
           placeHolder={'Sign in'}
@@ -162,5 +175,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around',
+  },
+  eachInput: {
+    marginBottom: 20,
   },
 });

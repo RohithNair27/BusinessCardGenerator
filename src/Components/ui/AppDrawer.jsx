@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useContext} from 'react';
 import {View, Text, StyleSheet, Image, Linking} from 'react-native';
 import {
   DrawerContentScrollView,
@@ -6,9 +6,17 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Profile from '../../Assets/Images/profile_drawer.svg';
-import QRModal from '../QRModal';
+import {getMobilePermission} from '../../Utils/Camera';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {CommonContext} from '../../Context/commonContext/CommonContext';
+import {userContext} from '../../Context/QRdataContext';
 const AppDrawerItem = props => {
+  const {showInfoModal, infoModalDisplay, infoModalDataInput, infoModalData} =
+    useContext(CommonContext);
+  const {loggedin, setLoggedin, loginData, setLoginData} =
+    useContext(userContext);
   const supportedURL = 'http://play.google.com/store';
   const handlePress = async () => {
     const supported = await Linking.canOpenURL(supportedURL);
@@ -19,11 +27,34 @@ const AppDrawerItem = props => {
     }
   };
 
+  const onPressLogout = () => {
+    showInfoModal();
+    infoModalDataInput('LOGOUT');
+  };
+
   return (
     <>
       <View style={styles.drawerHeader}>
-        <Profile />
-        <Text style={styles.drawerHeaderText}>Rohtih K Nair</Text>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={{
+            // borderWidth: 2,
+            // borderRadius: 50,
+            // padding: 5,
+            borderColor: '#103550',
+            alignItems: 'center',
+            marginBottom: 10,
+          }}
+          onPress={() => {
+            getMobilePermission('launchImage');
+          }}>
+          <Profile />
+
+          <View style={styles.editbutton}>
+            <MaterialIcons size={25} name={'edit'} color={'white'} />
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.drawerHeaderText}>{loginData?.displayName}</Text>
         <Text
           style={{
             ...styles.drawerHeaderText,
@@ -31,7 +62,7 @@ const AppDrawerItem = props => {
             color: '#777777',
             fontWeight: 'normal',
           }}>
-          Rohithnair@gmail.com
+          {loginData.email}
         </Text>
       </View>
       <DrawerContentScrollView>
@@ -42,7 +73,7 @@ const AppDrawerItem = props => {
           }}
           labelStyle={{color: 'black'}}
           label="Logout"
-          onPress={() => console.log('FIRE CUSTOM LOGOUT FUNCTION')}
+          onPress={() => onPressLogout()}
         />
         <DrawerItem
           icon={({focused, color}) => {
@@ -78,6 +109,18 @@ const styles = StyleSheet.create({
 
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  editbutton: {
+    position: 'absolute',
+    // borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40%',
+    height: '40%',
+    bottom: 0,
+    right: 0,
+    borderRadius: 50,
+    backgroundColor: 'rgba(0, 0, 0, .5)',
   },
   footer: {
     borderColor: 'lightgray',

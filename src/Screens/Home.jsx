@@ -9,6 +9,7 @@ import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataCon
 import {userContext} from '../Context/QRdataContext';
 import {useIsFocused} from '@react-navigation/native';
 import QRModal from '../Components/QRModal';
+import Confused from '../Assets/Images/confused.svg';
 
 const Home = ({navigation, route}) => {
   const {isLoading, changeLoading} = useContext(userContext);
@@ -33,7 +34,9 @@ const Home = ({navigation, route}) => {
     setModalStatus(!modalStatus);
     setCurrentModalData(item);
   };
-
+  const filteredData = peopleData.filter(element =>
+    element.name.includes(text),
+  );
   //this user effect will fatch the data at the new call
   useEffect(() => {
     if (isInitialRender.current) {
@@ -77,17 +80,40 @@ const Home = ({navigation, route}) => {
           paddingLeft="7%"
         />
       </View>
-      <View style={styles.inputBody}>
-        <MasonryFlashList
-          renderItem={({item}) => (
-            <InfoCards item={item} onClick={onPressForModal} />
-          )}
-          estimatedItemSize={50}
-          data={peopleData.filter(element => {
-            return element.name.includes(text);
-          })}
-          numColumns={2}
-        />
+      <View
+        style={[
+          styles.inputBody,
+          peopleData.length < 1 || filteredData.length < 1
+            ? {alignItems: 'center', justifyContent: 'center'}
+            : null,
+        ]}>
+        {peopleData.length < 1 || filteredData.length < 1 ? (
+          <View
+            style={{
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '70%',
+              height: '40%',
+              justifyContent: 'space-around',
+            }}>
+            <Confused />
+
+            <Text style={styles.subtext}>
+              Oops! Your contact list is as empty as a ghost town. Let's fix
+              that!
+            </Text>
+          </View>
+        ) : (
+          <MasonryFlashList
+            renderItem={({item}) => (
+              <InfoCards item={item} onClick={onPressForModal} />
+            )}
+            estimatedItemSize={50}
+            data={filteredData}
+            numColumns={2}
+          />
+        )}
       </View>
     </View>
   );
@@ -123,9 +149,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Roboto',
   },
+  subtext: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 10,
+  },
   navigateCard: {
-    // position: 'absolute',
-    // top: HEIGHT * 0.25,
     right: '5%',
     width: '60%',
     flexDirection: 'row',
@@ -156,6 +186,8 @@ const styles = StyleSheet.create({
   inputBody: {
     paddingTop: '2%',
     flex: 1,
+    // borderWidth: 1,
+
     // height: HEIGHT * 0.45,
     width: '100%',
     // top: HEIGHT * 0.06,

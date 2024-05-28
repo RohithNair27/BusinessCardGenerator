@@ -16,10 +16,18 @@ import {CommonContext} from '../Context/commonContext/CommonContext';
 import {EmailValidation, PasswordValidation} from '../Utils/validation';
 import Snackbar from '../Components/ui/Snackbar';
 const SignupPage = ({navigation}) => {
-  const {isLoading, changeLoading, loggedin, setLoggedin} =
-    useContext(userContext);
+  const {
+    isLoading,
+    changeLoading,
+    loggedin,
+    setLoggedin,
+    isSignIn,
+
+    setIsSignIn,
+  } = useContext(userContext);
   const {snackBarDisplay, showHideSnackBar, snackBarError, changeErrorMessage} =
     useContext(CommonContext);
+
   const [signupData, setSignupData] = useState({
     Email_id: {
       name: 'Email_id',
@@ -63,6 +71,7 @@ const SignupPage = ({navigation}) => {
 
       if (response === 'User account created & signed in!') {
         setLoggedin(true);
+        setIsSignIn(true);
       } else if (response === 'That email address is already in use!') {
         showErrorMessage('Account exists kindly login');
       } else {
@@ -94,33 +103,52 @@ const SignupPage = ({navigation}) => {
       <Text style={styles.welcomeText}>Let's make your </Text>
       <Text style={{...styles.welcomeText, color: '#636EAB'}}>account!</Text>
       <View style={styles.bottomBody}>
-        <InputField
-          height={'13%'}
-          width={'100%'}
-          placeholderAbove={'Email id'}
-          value={signupData.Email_id.value}
-          keyProps={signupData.Email_id.name}
-          onValueChange={onChageText}
-          secureTextEntry={false}
-        />
-        <InputField
-          height={'13%'}
-          width={'100%'}
-          placeholderAbove={'User name'}
-          value={signupData.User_Name.value}
-          keyProps={signupData.User_Name.name}
-          onValueChange={onChageText}
-          secureTextEntry={false}
-        />
-        <InputField
-          height={'13%'}
-          width={'100%'}
-          placeholderAbove={'Password'}
-          value={signupData.Password.value}
-          keyProps={signupData.Password.name}
-          onValueChange={onChageText}
-          secureTextEntry={true}
-        />
+        <View style={styles.eachInput}>
+          <InputField
+            placeholderAbove={'Email'}
+            value={signupData.Email_id.value}
+            keyProps={signupData.Email_id.name}
+            placeHolder={'ex - youremail@gmail.com'}
+            onValueChange={onChageText}
+            keyBoardType={'text'}
+            borderColor={'#636EAB'}
+            compulsory={false}
+            maxLength={50}
+            paddingLeft="5%"
+            secureTextEntry={false}
+          />
+        </View>
+        <View style={styles.eachInput}>
+          <InputField
+            placeholderAbove={'User name'}
+            value={signupData.User_Name.value}
+            keyProps={signupData.User_Name.name}
+            placeHolder={'ex - nickname'}
+            onValueChange={onChageText}
+            keyBoardType={'text'}
+            borderColor={'#636EAB'}
+            compulsory={false}
+            maxLength={50}
+            paddingLeft="5%"
+            secureTextEntry={false}
+          />
+        </View>
+        <View style={styles.eachInput}>
+          <InputField
+            placeholderAbove={'Password'}
+            value={signupData.Password.value}
+            keyProps={signupData.Password.name}
+            placeHolder={'Password'}
+            onValueChange={onChageText}
+            keyBoardType={'text'}
+            borderColor={'#636EAB'}
+            compulsory={false}
+            maxLength={50}
+            paddingLeft="5%"
+            secureTextEntry={false}
+          />
+        </View>
+
         <Button
           placeHolder={'Sign in'}
           width={'100%'}
