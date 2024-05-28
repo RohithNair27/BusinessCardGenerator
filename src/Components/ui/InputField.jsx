@@ -21,7 +21,6 @@ const InputField = ({
   height,
   placeholderAbove,
   secureTextEntry,
-  borderColor,
   compulsory,
   icon,
   paddingLeft,
@@ -102,7 +101,7 @@ export default InputField;
 const styles = StyleSheet.create({
   inputBody: {
     width: '80%',
-    height: '35%',
+    height: '40%',
     paddingleft: '10px',
     flexDirection: 'row',
     justifyContent: 'center',
