@@ -7,14 +7,14 @@ import {
   StatusBar,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
-import {CommonContext} from '../../Context/commonContext/CommonContext';
 import Button from './Button';
+import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 import Plane from '../../Assets/Images/plane.svg';
 import {logoutPress} from '../../Firebase/FirebaseAuth';
-import {userContext} from '../../Context/QRdataContext';
+import {AuthContext} from '../../Context/AuthContext/AuthContext';
 const InfoModal = () => {
   const {showInfoModal, infoModalDisplay, infoModalDataInput, infoModalData} =
-    useContext(CommonContext);
+    useContext(AppStateContext);
   const {
     loggedin,
     setLoggedin,
@@ -23,14 +23,15 @@ const InfoModal = () => {
     isSignIn,
     changeSignIn,
     setIsSignIn,
-  } = useContext(userContext);
+  } = useContext(AuthContext);
 
   const [next, setNext] = useState(true);
 
   const onPressLogOut = () => {
     logoutPress();
-    setLoggedin();
+    setLoggedin(false);
     showInfoModal();
+    setLoginData({});
   };
 
   const onPressPressDiveIn = () => {

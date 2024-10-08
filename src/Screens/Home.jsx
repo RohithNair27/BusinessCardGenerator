@@ -3,27 +3,31 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import InfoCards from '../Components/ui/InfoCards';
 import {MasonryFlashList} from '@shopify/flash-list';
 import InputField from '../Components/ui/InputField';
-import {readAsyncData} from '../Utils/AsyncStorage';
+import {clearAll, readAsyncData} from '../Utils/AsyncStorage';
 import Loader from '../Components/ui/Loader';
-import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
-import {userContext} from '../Context/QRdataContext';
 import {useIsFocused} from '@react-navigation/native';
 import QRModal from '../Components/QRModal';
 import Confused from '../Assets/Images/confused.svg';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
+import {ConnectionsDataContext} from '../Context/ConnectionsContext/ConnectionsContext';
 
 const Home = ({navigation, route}) => {
-  const {isLoading, changeLoading} = useContext(userContext);
-  const {peopleData, addData} = useContext(PersonalDataContext);
+  const isFocused = useIsFocused();
+  const {isLoading, changeLoading} = useContext(AuthContext);
+  const {peopleData, addData} = useContext(ConnectionsDataContext);
   const [text, setText] = useState('');
   const [modalStatus, setModalStatus] = useState(false);
   const isInitialRender = useRef(true);
   const [currentModalData, setCurrentModalData] = useState();
-  const isFocused = useIsFocused();
-
+  console.log(peopleData);
   //this function is called when the app loads for first time
   const fetchDataFromLocal = async () => {
     const data = await readAsyncData();
-    addData(data);
+    console.log('called');
+    console.log(data, 'first load data');
+    if (data.length > 0) {
+      addData(data, true);
+    }
   };
 
   const onChangeText = (key, texts) => {
@@ -37,26 +41,24 @@ const Home = ({navigation, route}) => {
   const filteredData = peopleData.filter(element =>
     element.name.includes(text),
   );
-  //this user effect will fatch the data at the new call
+  // this user effect will fatch the data at the new call
   useEffect(() => {
     if (isInitialRender.current) {
       fetchDataFromLocal();
       isInitialRender.current = false;
     }
-  }, []);
+  }, [isFocused]);
 
   return isLoading ? (
     <Loader />
   ) : (
     <View style={styles.body}>
       <StatusBar backgroundColor={'#103550'} />
-
       <QRModal
         onClick={onPressForModal}
         status={modalStatus}
         data={currentModalData}
       />
-
       <View style={styles.topFields}>
         <Text style={styles.headerText}>Good day</Text>
         <Text
@@ -77,7 +79,7 @@ const Home = ({navigation, route}) => {
           onValueChange={onChangeText}
           value={text}
           keyProps={'no user'}
-          paddingLeft="7%"
+          paddingLeft="5%"
         />
       </View>
       <View

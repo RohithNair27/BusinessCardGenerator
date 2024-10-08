@@ -1,26 +1,25 @@
 import auth from '@react-native-firebase/auth';
 
-export const signUpFirebase = async (email, passorrd, username) => {
-  return await auth()
-    .createUserWithEmailAndPassword(email, passorrd)
-    .then(async result => {
-      return await result.user
-        .updateProfile({
-          displayName: username,
-        })
-        .then(function () {
-          return 'User account created & signed in!';
-        });
-    })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        return 'That email address is already in use!';
-      }
+export const signUpFirebase = async (email, password, username) => {
+  try {
+    const result = await auth().createUserWithEmailAndPassword(email, password);
+    await result.user.updateProfile({displayName: username});
+    await auth().currentUser.reload();
+    const updatedUser = auth().currentUser;
 
-      if (error.code === 'auth/invalid-email') {
-        return 'That email address is invalid!';
-      }
-    });
+    return {
+      message: 'User account created & signed in!',
+      userInfo: updatedUser,
+    };
+  } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      return 'That email address is already in use!';
+    }
+
+    if (error.code === 'auth/invalid-email') {
+      return 'That email address is invalid!';
+    }
+  }
 };
 
 export const loginFirebase = async (email, password) => {
@@ -62,7 +61,6 @@ export const updatePersonalProfilePicture = async () => {
   };
 
   const result = await auth().currentUser.updateProfile(profile);
-  console.log(result);
 };
 
 export const logoutPress = () => {

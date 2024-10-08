@@ -37,7 +37,6 @@ export function isEmptyString(str) {
 }
 export function isPersonalWebsite(str) {
   const regex = /(http(s)?)?([\w-]+\.)+[\w-]+([\w- ;,./?%&=]*)?/;
-  console.log(regex.test(str), 'test');
   if (regex.test(str)) {
     return true;
   } else {

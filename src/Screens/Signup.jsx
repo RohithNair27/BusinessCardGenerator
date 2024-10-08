@@ -6,27 +6,25 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import Loader from '../Components/ui/Loader';
 import {signUpFirebase} from '../Firebase/FirebaseAuth';
-import {userContext} from '../Context/QRdataContext';
-import {CommonContext} from '../Context/commonContext/CommonContext';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
 import {EmailValidation, PasswordValidation} from '../Utils/validation';
+import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
 import Snackbar from '../Components/ui/Snackbar';
 const SignupPage = ({navigation}) => {
+  const {setLoggedin, setLoginData, loginData} = useContext(AuthContext);
   const {
+    snackBarDisplay,
+    showHideSnackBar,
+    snackBarError,
+    changeErrorMessage,
     isLoading,
     changeLoading,
-    loggedin,
-    setLoggedin,
-    isSignIn,
-
-    setIsSignIn,
-  } = useContext(userContext);
-  const {snackBarDisplay, showHideSnackBar, snackBarError, changeErrorMessage} =
-    useContext(CommonContext);
+  } = useContext(AppStateContext);
 
   const [signupData, setSignupData] = useState({
     Email_id: {
@@ -68,10 +66,9 @@ const SignupPage = ({navigation}) => {
     changeLoading(true);
     try {
       const response = await signUpFirebase(email, password, username);
-
-      if (response === 'User account created & signed in!') {
-        setLoggedin(true);
-        setIsSignIn(true);
+      if (response.message === 'User account created & signed in!') {
+        setLoginData(response.userInfo);
+        setLoggedin(true, 'we have loggedin');
       } else if (response === 'That email address is already in use!') {
         showErrorMessage('Account exists kindly login');
       } else {
@@ -123,7 +120,7 @@ const SignupPage = ({navigation}) => {
             placeholderAbove={'User name'}
             value={signupData.User_Name.value}
             keyProps={signupData.User_Name.name}
-            placeHolder={'ex - nickname'}
+            placeHolder={'Ex - nickname'}
             onValueChange={onChageText}
             keyBoardType={'text'}
             borderColor={'#636EAB'}
@@ -145,7 +142,7 @@ const SignupPage = ({navigation}) => {
             compulsory={false}
             maxLength={50}
             paddingLeft="5%"
-            secureTextEntry={false}
+            secureTextEntry={true}
           />
         </View>
 

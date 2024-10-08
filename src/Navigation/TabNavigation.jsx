@@ -4,11 +4,10 @@ import VisionCamera from '../Screens/VisionCamera';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CreateQR from '../Screens/CreateQR';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import InfoModal from '../Components/ui/InfoModal';
-import {userContext} from '../Context/QRdataContext';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
 const TabNavigator = () => {
   //isSignIn,changeSignIn,
-  const {isSignIn, changeSignIn} = useContext(userContext);
+  const {isSignIn, changeSignIn} = useContext(AuthContext);
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator

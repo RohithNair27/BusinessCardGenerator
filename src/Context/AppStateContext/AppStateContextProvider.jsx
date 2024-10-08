@@ -1,11 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
-import {CommonContext} from './CommonContext';
-const CommonContextProvider = ({children}) => {
+import {AppStateContext} from './AppStateContext';
+const AppStateContextProvider = ({children}) => {
   const [snackBarDisplay, setsnackBarDisplay] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [snackBarError, setSnackBarError] = useState('Please try again');
   const [infoModalDisplay, setInfoModalDisplay] = useState(false);
   const [infoModalData, setInfoModalData] = useState('');
+
+  //loading screen
+  const changeLoading = value => {
+    setIsLoading(value);
+  };
+
+  //snackbar
   const showHideSnackBar = () => {
     setsnackBarDisplay(!snackBarDisplay);
 
@@ -27,8 +34,10 @@ const CommonContextProvider = ({children}) => {
   }
 
   return (
-    <CommonContext.Provider
+    <AppStateContext.Provider
       value={{
+        isLoading,
+        changeLoading,
         snackBarDisplay,
         showHideSnackBar,
         snackBarError,
@@ -39,10 +48,8 @@ const CommonContextProvider = ({children}) => {
         infoModalData,
       }}>
       {children}
-    </CommonContext.Provider>
+    </AppStateContext.Provider>
   );
 };
 
-export default CommonContextProvider;
-
-const styles = StyleSheet.create({});
+export default AppStateContextProvider;

@@ -5,21 +5,17 @@ import SignupPage from '../Screens/Signup';
 import LoginPage from '../Screens/LoginPage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {checkLoginStatus} from '../Firebase/FirebaseAuth';
-import {userContext} from '../Context/QRdataContext';
 import AppDrawer from './DrawerNavigation';
-import InfoModal from '../Components/ui/InfoModal';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const {loggedin, setLoggedin, loginData, setLoginData} =
-    useContext(userContext);
+    useContext(AuthContext);
   const onLoad = async () => {
     try {
       const data = await checkLoginStatus();
-      console.log(data);
       setLoginData(data);
-      if (data.uid) {
-        setLoggedin(true);
-      }
+      setLoggedin(true);
     } catch (error) {
       setLoggedin(false);
     }
