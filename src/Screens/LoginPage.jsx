@@ -5,19 +5,22 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
-import {userContext} from '../Context/QRdataContext';
-import {CommonContext} from '../Context/commonContext/CommonContext';
+import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
 import {loginFirebase} from '../Firebase/FirebaseAuth';
 import Loader from '../Components/ui/Loader';
 import {EmailValidation, PasswordValidation} from '../Utils/validation';
 const LoginPage = ({navigation}) => {
-  const {isLoading, changeLoading, loggedin, setLoggedin} =
-    useContext(userContext);
-  const {snackBarDisplay, showHideSnackBar, snackBarError, changeErrorMessage} =
-    useContext(CommonContext);
+  const {
+    snackBarDisplay,
+    showHideSnackBar,
+    snackBarError,
+    changeErrorMessage,
+    isLoading,
+    changeLoading,
+  } = useContext(AppStateContext);
   const [loginData, setLoginData] = useState({
     Email_id: {
       name: 'Email_id',
@@ -30,15 +33,14 @@ const LoginPage = ({navigation}) => {
   });
 
   const onChageText = (key, text) => {
-    console.log(text);
     setLoginData({
       ...loginData,
       [key]: {...loginData[key], value: text},
     });
   };
   const onPressSignUp = async () => {
-    const email = loginData.Email_id.value.trimEnd();
-    const password = loginData.Password.value.trimEnd();
+    const email = loginData?.Email_id.value.trimEnd();
+    const password = loginData?.Password.value.trimEnd();
 
     const isEmailValid = EmailValidation(email);
     const isPasswordValid = PasswordValidation(password);
@@ -54,20 +56,17 @@ const LoginPage = ({navigation}) => {
     }
     changeLoading(true);
     try {
-      console.log('user');
       let response = await loginFirebase(
         loginData.Email_id.value,
         loginData.Password.value,
       );
       if (response === 'User exists!') {
-        setLoggedin(true);
+        // setLoggedin(true);
       } else if (response === 'auth/invalid-credential') {
         showErrorMessage('User does not exists');
       } else {
         showErrorMessage(response);
       }
-
-      console.log(response);
     } catch (error) {
       showErrorMessage('An error occurred during sign up');
     } finally {

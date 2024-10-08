@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, Linking} from 'react-native';
 import {
   DrawerContentScrollView,
@@ -10,13 +10,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Profile from '../../Assets/Images/profile_drawer.svg';
 import {getMobilePermission} from '../../Utils/Camera';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {CommonContext} from '../../Context/commonContext/CommonContext';
-import {userContext} from '../../Context/QRdataContext';
+import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
+import {AuthContext} from '../../Context/AuthContext/AuthContext';
 const AppDrawerItem = props => {
-  const {showInfoModal, infoModalDisplay, infoModalDataInput, infoModalData} =
-    useContext(CommonContext);
-  const {loggedin, setLoggedin, loginData, setLoginData} =
-    useContext(userContext);
+  const {showInfoModal, infoModalDataInput} = useContext(AppStateContext);
+  const {loginData} = useContext(AuthContext);
   const supportedURL = 'http://play.google.com/store';
   const handlePress = async () => {
     const supported = await Linking.canOpenURL(supportedURL);
@@ -38,9 +36,6 @@ const AppDrawerItem = props => {
         <TouchableOpacity
           activeOpacity={0.7}
           style={{
-            // borderWidth: 2,
-            // borderRadius: 50,
-            // padding: 5,
             borderColor: '#103550',
             alignItems: 'center',
             marginBottom: 10,
@@ -54,7 +49,9 @@ const AppDrawerItem = props => {
             <MaterialIcons size={25} name={'edit'} color={'white'} />
           </View>
         </TouchableOpacity>
-        <Text style={styles.drawerHeaderText}>{loginData?.displayName}</Text>
+        <Text style={styles.drawerHeaderText}>
+          {loginData ? loginData?.displayName : 'Loading...'}
+        </Text>
         <Text
           style={{
             ...styles.drawerHeaderText,
@@ -62,7 +59,7 @@ const AppDrawerItem = props => {
             color: '#777777',
             fontWeight: 'normal',
           }}>
-          {loginData.email}
+          {loginData?.email}
         </Text>
       </View>
       <DrawerContentScrollView>

@@ -1,29 +1,29 @@
-import {StyleSheet, Text, View, StatusBar, Modal, Image} from 'react-native';
-import React, {useContext} from 'react';
-import {useIsFocused} from '@react-navigation/native';
-import QRcode from './ui/QRcode';
-import youngman from '../Assets/Images/youngman.png';
-import Button from './ui/Button';
-
-const QRModal = ({onClick, data, status}) => {
-  const isFocused = useIsFocused();
+import {StyleSheet, Text, View, Image} from 'react-native';
+import Button from '../Components/ui/Button';
+import React from 'react';
+import ProfilePic from '../Assets/Images/profile_drawer.svg';
+// import QRModal from '../Components/QRModal';
+import QRcode from '../Components/ui/QRcode';
+const Profile = () => {
+  const data = {
+    Time: 'October 8, 2024',
+    city: 'India',
+    company_name: 'Hshshaha',
+    email: 'Nair@gmail.com',
+    name: 'Nair',
+    number: '4664646444',
+    profession: 'Hshshhsha',
+    terms: false,
+  };
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={status}
-      useNativeDriver={true}
-      onRequestClose={onClick}
-      animationIn={'slideInUp'}
-      animationOut={'slideOutDown'}>
-      {isFocused ? <StatusBar backgroundColor={'white'} /> : null}
-
+    <View>
       <View style={styles.centeredView}>
         <View style={styles.qrview}>
           <View style={styles.idCard}>
             <View style={styles.header}>
-              <Image
-                source={youngman}
+              <ProfilePic />
+              {/* <Image
+                source={ProfilePic}
                 style={{
                   // borderWidth: 1,
                   width: '30%',
@@ -32,7 +32,7 @@ const QRModal = ({onClick, data, status}) => {
                   padding: 20,
                   borderRadius: 15,
                 }}
-              />
+              /> */}
               <View style={styles.headerTextContainer}>
                 <View>
                   <Text style={{...styles.label, color: 'black'}}>
@@ -90,23 +90,15 @@ const QRModal = ({onClick, data, status}) => {
             </View>
             <View style={styles.footer}>
               <QRcode size={150} peronsalInfo={data} />
-              <Button
-                placeHolder={'Close'}
-                backgroundColor={'#FF7377'}
-                width={'70%'}
-                height={'15%'}
-                textColor={'#fff'}
-                onPress={() => onClick()}
-              />
             </View>
           </View>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 
-export default QRModal;
+export default Profile;
 
 const styles = StyleSheet.create({
   centeredView: {

@@ -46,11 +46,11 @@ const InputField = ({
       {placeholderAbove ? (
         <Text
           style={{
-            marginBottom: '1%',
+            marginBottom: '2%',
             paddingLeft: '2%',
           }}>
-          {compulsory ? <Text style={{color: 'red'}}>*</Text> : null}
           {placeholderAbove}
+          {compulsory ? <Text style={{color: 'red'}}>*</Text> : null}
         </Text>
       ) : null}
       <View
@@ -71,23 +71,19 @@ const InputField = ({
           secureTextEntry={secureTextEntry === visiblePassword}
         />
         {icon === 'search' ? (
-          <TouchableOpacity>
-            <FontAwesome5
-              name="search"
-              size={25}
-              color="lightgray"
-              style={styles.icons}
-            />
+          <TouchableOpacity style={[styles.icons]} activeOpacity={0.8}>
+            <FontAwesome5 name="search" size={25} color="lightgray" />
           </TouchableOpacity>
         ) : null}
         {secureTextEntry ? (
           <TouchableOpacity
-            style={styles.icons}
+            activeOpacity={0.8}
+            style={[styles.icons]}
             onPress={() => passwordVisible()}>
             {visiblePassword ? (
-              <Entypo name="eye-with-line" size={30} color="#000" />
+              <Entypo name="eye-with-line" size={25} color="#000" />
             ) : (
-              <Entypo name="eye" size={30} color="#000" />
+              <Entypo name="eye" size={25} color="#000" />
             )}
           </TouchableOpacity>
         ) : null}
@@ -100,9 +96,6 @@ export default InputField;
 
 const styles = StyleSheet.create({
   inputBody: {
-    width: '80%',
-    height: '40%',
-    paddingleft: '10px',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -116,7 +109,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   icons: {
-    position: 'relative',
-    right: 20,
+    position: 'absolute',
+    right: '5%',
   },
 });

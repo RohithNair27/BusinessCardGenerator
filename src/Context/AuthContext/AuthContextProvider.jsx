@@ -1,25 +1,17 @@
 import React, {useState} from 'react';
-import {userContext} from './QRdataContext';
-
-const QRcontextProvider = ({children}) => {
-  const [isLoading, setIsLoading] = useState(false);
+import {AuthContext} from './AuthContext';
+const AuthContextProvider = ({children}) => {
   const [loggedin, setLoggedin] = useState(false);
   const [loginData, setLoginData] = useState({});
   const [isSignIn, setIsSignIn] = useState(false);
-  const changeLoading = value => {
-    setIsLoading(value);
-  };
 
   const changeSignIn = status => {
     setIsSignIn(status);
-    console.log(isSignIn, 'signin');
   };
 
   return (
-    <userContext.Provider
+    <AuthContext.Provider
       value={{
-        isLoading,
-        changeLoading,
         loggedin,
         setLoggedin,
         loginData,
@@ -29,8 +21,8 @@ const QRcontextProvider = ({children}) => {
         setIsSignIn,
       }}>
       {children}
-    </userContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export default QRcontextProvider;
+export default AuthContextProvider;

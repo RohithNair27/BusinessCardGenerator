@@ -1,5 +1,6 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Setting from '../Screens/Setting';
+import Profile from '../Screens/Profile';
 import TabNavigator from './TabNavigation';
 import AppDrawerItem from '../Components/ui/AppDrawer';
 import Backups from '../Screens/Backups';
@@ -36,24 +37,10 @@ function AppDrawer() {
       />
 
       <Drawer.Screen
-        name="Backup"
-        component={Backups}
+        name="Profile"
+        component={Profile}
         options={{
-          title: 'Backup',
-          drawerIcon: ({focused, color}) => (
-            <FontAwesome
-              name="cloud-upload"
-              size={24}
-              color={focused ? '#FF7377' : 'black'}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="setting"
-        component={Setting}
-        options={{
-          title: 'Settings',
+          title: 'Your profile',
           drawerIcon: ({focused, color}) => (
             <Ionicons
               name="settings-sharp"
@@ -63,6 +50,7 @@ function AppDrawer() {
           ),
         }}
       />
+
       <Drawer.Screen
         name="Terms"
         component={TermsAndConditions}
@@ -71,6 +59,20 @@ function AppDrawer() {
           drawerIcon: ({focused, color}) => (
             <Ionicons
               name="document-text"
+              size={24}
+              color={focused ? '#FF7377' : 'black'}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Backup"
+        component={Backups}
+        options={{
+          title: 'Backup',
+          drawerIcon: ({focused, color}) => (
+            <FontAwesome
+              name="cloud-upload"
               size={24}
               color={focused ? '#FF7377' : 'black'}
             />

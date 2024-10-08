@@ -9,9 +9,9 @@ import {
   Touchable,
   TouchableOpacity,
 } from 'react-native';
-import {CommonContext} from '../../Context/commonContext/CommonContext';
+import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 function Snackbar({error}) {
-  const {showHideSnackBar} = useContext(CommonContext);
+  const {showHideSnackBar} = useContext(AppStateContext);
   return (
     <Modal
       animationType="fade"
@@ -28,7 +28,6 @@ function Snackbar({error}) {
           style={{
             ...styles.errorText,
             width: 50,
-
             justifyContent: 'center',
             alignItems: 'center',
           }}>

@@ -1,15 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import CommonContextProvider from './commonContext/CommonContextProvider';
-import QRcontextProvider from './QRcontextProvider';
-import PersonalContextProvider from './PersonalDataContext/DetailsDataProvider';
+import AppStateContextProvider from './AppStateContext/AppStateContextProvider';
+import AuthContextProvider from './AuthContext/AuthContextProvider';
+import ConnectionsDataContextProvider from './ConnectionsContext/ConnectionsContextProvider';
 const ContextIndex = ({children}) => {
   return (
-    <CommonContextProvider>
-      <PersonalContextProvider>
-        <QRcontextProvider>{children}</QRcontextProvider>
-      </PersonalContextProvider>
-    </CommonContextProvider>
+    <AppStateContextProvider>
+      <AuthContextProvider>
+        <ConnectionsDataContextProvider>
+          {children}
+        </ConnectionsDataContextProvider>
+      </AuthContextProvider>
+    </AppStateContextProvider>
   );
 };
 

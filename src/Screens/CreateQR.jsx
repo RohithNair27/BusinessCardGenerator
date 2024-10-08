@@ -1,17 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  ScrollView,
-  PermissionsAndroid,
-} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import {useIsFocused} from '@react-navigation/native';
 import Snackbar from '../Components/ui/Snackbar';
-import {CommonContext} from '../Context/commonContext/CommonContext';
+import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
 import Radiobutton from '../Components/ui/Radiobutton';
 import {
   EmailValidation,
@@ -19,16 +12,18 @@ import {
   isValidPhoneNumber,
 } from '../Utils/validation';
 import {storeDataLocally} from '../Utils/AsyncStorage';
-import {PersonalDataContext} from '../Context/PersonalDataContext/DetailsDataContext';
+import {ConnectionsDataContext} from '../Context/ConnectionsContext/ConnectionsContext';
 import {getCurrentDateFormatted} from '../Utils/CurrentDate';
 import InfoModal from '../Components/ui/InfoModal';
 import {getMobilePermission} from '../Utils/Camera';
-import {userContext} from '../Context/QRdataContext';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
+import {clearAll} from '../Utils/AsyncStorage';
 const CreateQR = ({navigation}) => {
   const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
-    useContext(CommonContext);
-  const {addData, termsAgreed, setTermsAgreed} =
-    useContext(PersonalDataContext);
+    useContext(AppStateContext);
+  const {addData, termsAgreed, setTermsAgreed, peopleData} = useContext(
+    ConnectionsDataContext,
+  );
   const {
     loggedin,
     setLoggedin,
@@ -36,15 +31,16 @@ const CreateQR = ({navigation}) => {
     setLoginData,
     isSignIn,
     changeSignIn,
-  } = useContext(userContext);
+  } = useContext(AuthContext);
   const isFocused = useIsFocused();
-  const [showQRcode, setshowQrCode] = useState(false);
+  // const [showQRcode, setshowQrCode] = useState(false);
   const [page, setPage] = useState(1);
-  const [personData, setPersonData] = useState({
+
+  const initialState = {
     username: {
       name: 'Enter your full name',
       value: '',
-      placeHolder: 'ex :- Elon musk',
+      placeHolder: 'ex :-Elon musk',
       maxLength: 20,
       page: 1,
       compulsory: true,
@@ -91,7 +87,8 @@ const CreateQR = ({navigation}) => {
       page: 2,
       compulsory: true,
     },
-  });
+  };
+  const [personData, setPersonData] = useState(initialState);
   const [qrData, setQrData] = useState();
 
   //handle validation
@@ -104,6 +101,7 @@ const CreateQR = ({navigation}) => {
     const Country = personData.Country.value.trimEnd();
     const CurrentTime = getCurrentDateFormatted();
 
+    //validation on device
     const isNameValid = isEmptyString(name);
     const isNumberValid = isValidPhoneNumber(number);
     const isCompanyNameValid = isEmptyString(company_name);
@@ -137,8 +135,7 @@ const CreateQR = ({navigation}) => {
       showErrorMessage('Kindly accept the terms');
       return;
     }
-
-    setQrData({
+    const saveLocally = await storeDataLocally(email, {
       name: name,
       number: number,
       company_name: company_name,
@@ -148,8 +145,28 @@ const CreateQR = ({navigation}) => {
       terms: termsAgreed,
       Time: CurrentTime,
     });
-
-    navigation.navigate('Home');
+    if (saveLocally.success) {
+      console.log('here 1');
+      console.log(saveLocally.message);
+      addData(
+        {
+          name: name,
+          number: number,
+          company_name: company_name,
+          email: email,
+          city: Country,
+          profession: profession,
+          terms: termsAgreed,
+          Time: CurrentTime,
+        },
+        false,
+      );
+      setPersonData(initialState);
+      navigation.navigate('Buzzcard');
+    } else {
+      console.log('here');
+      showErrorMessage(saveLocally.message);
+    }
   };
   const showErrorMessage = message => {
     showHideSnackBar(true);
@@ -166,7 +183,6 @@ const CreateQR = ({navigation}) => {
 
   //handle terms
   const handleOptionSelect = () => {
-    console.log(termsAgreed);
     setTermsAgreed(!termsAgreed);
     navigation.navigate('Terms');
   };
@@ -183,26 +199,6 @@ const CreateQR = ({navigation}) => {
   useEffect(() => {
     setPage(1);
   }, [isFocused]);
-  // useEffect(() => {}, [isSignIn]);
-
-  const addDataToLocal = async () => {
-    const result = await storeDataLocally(personData.Email.value, qrData);
-    if (result) {
-      addData([qrData]);
-    } else {
-      console.log('added before not added now');
-    }
-  };
-  const onPressCaptureImage = async () => {
-    let uri = await getMobilePermission();
-    console.log(uri, 'uri');
-  };
-
-  useEffect(() => {
-    if (personData.Email.value !== '') {
-      addDataToLocal();
-    }
-  }, [qrData]);
 
   return (
     <View style={styles.body}>
