@@ -10,21 +10,20 @@ import QRModal from '../Components/QRModal';
 import Confused from '../Assets/Images/confused.svg';
 import {AuthContext} from '../Context/AuthContext/AuthContext';
 import {ConnectionsDataContext} from '../Context/ConnectionsContext/ConnectionsContext';
-
+import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
+import InfoModal from '../Components/ui/InfoModal';
 const Home = ({navigation, route}) => {
   const isFocused = useIsFocused();
-  const {isLoading, changeLoading} = useContext(AuthContext);
+  const {isLoading, changeLoading, isFirstTimeUser} = useContext(AuthContext);
   const {peopleData, addData} = useContext(ConnectionsDataContext);
+  const {setInfoModalVisible, isinfoModalVisible} = useContext(AppStateContext);
   const [text, setText] = useState('');
   const [modalStatus, setModalStatus] = useState(false);
   const isInitialRender = useRef(true);
   const [currentModalData, setCurrentModalData] = useState();
-  console.log(peopleData);
   //this function is called when the app loads for first time
   const fetchDataFromLocal = async () => {
     const data = await readAsyncData();
-    console.log('called');
-    console.log(data, 'first load data');
     if (data.length > 0) {
       addData(data, true);
     }
@@ -46,6 +45,8 @@ const Home = ({navigation, route}) => {
     if (isInitialRender.current) {
       fetchDataFromLocal();
       isInitialRender.current = false;
+      if (isFirstTimeUser) {
+      }
     }
   }, [isFocused]);
 
@@ -53,6 +54,7 @@ const Home = ({navigation, route}) => {
     <Loader />
   ) : (
     <View style={styles.body}>
+      {isinfoModalVisible.visible ? <InfoModal /> : null}
       <StatusBar backgroundColor={'#103550'} />
       <QRModal
         onClick={onPressForModal}

@@ -3,11 +3,7 @@ import {AuthContext} from './AuthContext';
 const AuthContextProvider = ({children}) => {
   const [loggedin, setLoggedin] = useState(false);
   const [loginData, setLoginData] = useState({});
-  const [isSignIn, setIsSignIn] = useState(false);
-
-  const changeSignIn = status => {
-    setIsSignIn(status);
-  };
+  const [isFirstTimeUser, setFirstTimeUser] = useState(false);
 
   return (
     <AuthContext.Provider
@@ -16,9 +12,8 @@ const AuthContextProvider = ({children}) => {
         setLoggedin,
         loginData,
         setLoginData,
-        isSignIn,
-        changeSignIn,
-        setIsSignIn,
+        isFirstTimeUser,
+        setFirstTimeUser,
       }}>
       {children}
     </AuthContext.Provider>

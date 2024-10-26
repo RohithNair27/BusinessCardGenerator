@@ -12,8 +12,9 @@ import {getMobilePermission} from '../../Utils/Camera';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 import {AuthContext} from '../../Context/AuthContext/AuthContext';
+import InfoModal from './InfoModal';
 const AppDrawerItem = props => {
-  const {showInfoModal, infoModalDataInput} = useContext(AppStateContext);
+  const {setInfoModalVisible} = useContext(AppStateContext);
   const {loginData} = useContext(AuthContext);
   const supportedURL = 'http://play.google.com/store';
   const handlePress = async () => {
@@ -26,8 +27,10 @@ const AppDrawerItem = props => {
   };
 
   const onPressLogout = () => {
-    showInfoModal();
-    infoModalDataInput('LOGOUT');
+    setInfoModalVisible({
+      visible: true,
+      modalType: 'LOGOUT_MODAL',
+    });
   };
 
   return (

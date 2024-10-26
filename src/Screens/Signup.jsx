@@ -16,7 +16,7 @@ import {EmailValidation, PasswordValidation} from '../Utils/validation';
 import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
 import Snackbar from '../Components/ui/Snackbar';
 const SignupPage = ({navigation}) => {
-  const {setLoggedin, setLoginData, loginData} = useContext(AuthContext);
+  const {setLoggedin, setLoginData, setFirstTimeUser} = useContext(AuthContext);
   const {
     snackBarDisplay,
     showHideSnackBar,
@@ -24,6 +24,7 @@ const SignupPage = ({navigation}) => {
     changeErrorMessage,
     isLoading,
     changeLoading,
+    setInfoModalVisible,
   } = useContext(AppStateContext);
 
   const [signupData, setSignupData] = useState({
@@ -67,8 +68,12 @@ const SignupPage = ({navigation}) => {
     try {
       const response = await signUpFirebase(email, password, username);
       if (response.message === 'User account created & signed in!') {
-        setLoginData(response.userInfo);
-        setLoggedin(true, 'we have loggedin');
+        setInfoModalVisible({
+          visible: true,
+          modalType: 'WELCOME_MODAL',
+        }); //user registration
+        setLoginData(response.userInfo); // user data
+        setLoggedin(true, 'we have loggedin'); // for stacknavigation handeling
       } else if (response === 'That email address is already in use!') {
         showErrorMessage('Account exists kindly login');
       } else {

@@ -9,7 +9,7 @@ const Backups = () => {
       <View>
         <Text style={styles.header}>Construction Underway</Text>
         <Text style={styles.subtext}>
-          Pardon our dust while we build something amazing!
+          Pardon the dust while we are working on this!
         </Text>
       </View>
       <Construction />
