@@ -9,7 +9,7 @@ export const getMobilePermission = async typeOfImage => {
     );
     if (result === PermissionsAndroid.RESULTS.GRANTED) {
       const uri = await getProfilePictureDevice(typeOfImage);
-      console.log(uri, 'uri fun');
+
       return uri;
     } else {
       Alert.alert('Camera permission denied');
@@ -35,7 +35,6 @@ const getProfilePictureDevice = async typeOfImage => {
       } else {
         const imageUri = response;
         updatePersonalProfilePicture(imageUri.assets[0].uri);
-        // console.log(imageUri.assets[0].uri);
       }
     });
   } else {
