@@ -6,11 +6,9 @@ const ConnectionsDataContextProvider = ({children}) => {
   const [termsAgreed, setTermsAgreed] = useState(false);
   const addData = (newData, isInitialRender) => {
     if (isInitialRender) {
-      console.log('Initail render', newData);
       setPeopleData(newData);
     } else {
       setPeopleData(prevData => [...prevData, newData]);
-      console.log('PREVdata', prevData);
     }
   };
 

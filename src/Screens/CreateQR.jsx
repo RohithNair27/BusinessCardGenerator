@@ -146,8 +146,6 @@ const CreateQR = ({navigation}) => {
       Time: CurrentTime,
     });
     if (saveLocally.success) {
-      console.log('here 1');
-      console.log(saveLocally.message);
       addData(
         {
           name: name,
@@ -164,7 +162,6 @@ const CreateQR = ({navigation}) => {
       setPersonData(initialState);
       navigation.navigate('Buzzcard');
     } else {
-      console.log('here');
       showErrorMessage(saveLocally.message);
     }
   };
@@ -203,7 +200,6 @@ const CreateQR = ({navigation}) => {
   return (
     <View style={styles.body}>
       {snackBarDisplay && <Snackbar error={snackBarError} />}
-      {console.log(isSignIn, 'in qr')}
       {isSignIn && <InfoModal />}
       <View style={styles.topFields}>
         <Text style={styles.headerText}>Add your details</Text>

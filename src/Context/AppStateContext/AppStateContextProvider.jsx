@@ -4,7 +4,10 @@ const AppStateContextProvider = ({children}) => {
   const [snackBarDisplay, setsnackBarDisplay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackBarError, setSnackBarError] = useState('Please try again');
-  const [infoModalDisplay, setInfoModalDisplay] = useState(false);
+  const [isinfoModalVisible, setInfoModalVisible] = useState({
+    visible: false,
+    modalType: '',
+  });
   const [infoModalData, setInfoModalData] = useState('');
 
   //loading screen
@@ -25,10 +28,6 @@ const AppStateContextProvider = ({children}) => {
     setSnackBarError(message);
   };
 
-  const showInfoModal = () => {
-    setInfoModalDisplay(!infoModalDisplay);
-  };
-
   function infoModalDataInput(data) {
     setInfoModalData(data);
   }
@@ -42,10 +41,8 @@ const AppStateContextProvider = ({children}) => {
         showHideSnackBar,
         snackBarError,
         changeErrorMessage,
-        showInfoModal,
-        infoModalDisplay,
-        infoModalDataInput,
-        infoModalData,
+        setInfoModalVisible,
+        isinfoModalVisible,
       }}>
       {children}
     </AppStateContext.Provider>
