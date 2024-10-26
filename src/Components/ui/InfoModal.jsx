@@ -6,49 +6,49 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Button from './Button';
 import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 import Plane from '../../Assets/Images/plane.svg';
 import {logoutPress} from '../../Firebase/FirebaseAuth';
 import {AuthContext} from '../../Context/AuthContext/AuthContext';
 const InfoModal = () => {
-  const {showInfoModal, infoModalDisplay, infoModalDataInput, infoModalData} =
+  const {showInfoModal, isinfoModalVisible, setInfoModalVisible} =
     useContext(AppStateContext);
-  const {
-    loggedin,
-    setLoggedin,
-    loginData,
-    setLoginData,
-    isSignIn,
-    changeSignIn,
-    setIsSignIn,
-  } = useContext(AuthContext);
+  const {loggedin, setLoggedin, loginData, setLoginData} =
+    useContext(AuthContext);
 
   const [next, setNext] = useState(true);
 
   const onPressLogOut = () => {
-    logoutPress();
-    setLoggedin(false);
-    showInfoModal();
     setLoginData({});
+    handleInfoModal();
+    setLoggedin(false);
+    logoutPress();
   };
 
   const onPressPressDiveIn = () => {
-    showInfoModal(false);
-    setIsSignIn(false);
+    setInfoModalVisible({
+      visible: false,
+      modalType: '',
+    });
   };
 
   const WelcomeModal = () => {
     return (
       <TouchableOpacity style={styles.centeredView} activeOpacity={1}>
+        <StatusBar backgroundColor={'rgba(0, 0, 0, 0.5)'} />
         <View style={styles.infoView}>
           {next ? (
             <>
               <Text style={styles.headerText}>Welcome! 🎉</Text>
               <Text style={[styles.subtext, {paddingVertical: 10}]}>
-                This app helps you create lifelong connections with a simple QR
-                scan
+                In today's digital world, meaningful professional connections
+                drive success. Our app replaces traditional business cards,
+                letting you instantly share and manage contact information,
+                making networking seamless and environmentally friendly while
+                keeping your professional network organized and accessible
+                anywhere.
               </Text>
               <View
                 style={[styles.buttonContainer, {justifyContent: 'center'}]}>
@@ -91,12 +91,19 @@ const InfoModal = () => {
     );
   };
 
+  const handleInfoModal = () => {
+    setInfoModalVisible({
+      visible: false,
+      modalType: '',
+    });
+  };
+
   const LogOutModal = () => {
     return (
       <TouchableOpacity
         style={styles.centeredView}
         activeOpacity={1}
-        onPress={() => showInfoModal()}>
+        onPress={() => handleInfoModal()}>
         <View style={styles.infoView}>
           <Plane style={styles.planeIcon} />
           <Text style={styles.headerText}>Log Out? 🥹</Text>
@@ -107,7 +114,7 @@ const InfoModal = () => {
               textColor={'#FF7377'}
               width={'45%'}
               height={'100%'}
-              onPress={() => showInfoModal()}
+              onPress={() => handleInfoModal()}
             />
             <Button
               placeHolder={'Log out'}
@@ -125,6 +132,18 @@ const InfoModal = () => {
     );
   };
 
+  function onShowModal() {
+    switch (isinfoModalVisible.modalType) {
+      case 'WELCOME_MODAL':
+        return <WelcomeModal />;
+      case 'LOGOUT_MODAL':
+        return <LogOutModal />;
+    }
+  }
+  useEffect(() => {
+    console.log('changed');
+    onShowModal();
+  }, [isinfoModalVisible]);
   return (
     <Modal
       animationType="fade"
@@ -132,8 +151,7 @@ const InfoModal = () => {
       visible={true}
       useNativeDriver={true}>
       <StatusBar backgroundColor={'rgba(0, 0, 0, 0.5)'} />
-      {!isSignIn && <LogOutModal />}
-      {isSignIn && <WelcomeModal />}
+      {onShowModal()}
     </Modal>
   );
 };
@@ -149,6 +167,7 @@ const styles = StyleSheet.create({
   },
   infoView: {
     backgroundColor: 'white',
+
     width: '80%',
     borderRadius: 20,
     padding: 20,

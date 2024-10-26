@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const storeDataLocally = async (key, value) => {
-  console.log(key, value);
   try {
     const jsonValue = JSON.stringify(value);
     const isKeyExists = await AsyncStorage.getItem(key);
     if (isKeyExists !== null) {
-      console.log('you are already added');
       return {
         success: false,
         message: 'The user is already added',
@@ -33,7 +31,6 @@ export const readAsyncData = async () => {
     for (let i = 0; i < keys.length; i++) {
       informationFromLocal.push(JSON.parse(result[i][1]));
     }
-    console.log('inital render in async', informationFromLocal);
     return informationFromLocal;
   } catch (error) {
     console.log(error);
@@ -46,6 +43,4 @@ export const clearAll = async () => {
   } catch (e) {
     // clear error
   }
-
-  console.log('Done.');
 };
