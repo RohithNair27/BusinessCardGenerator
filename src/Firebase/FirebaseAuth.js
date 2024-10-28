@@ -23,17 +23,17 @@ export const signUpFirebase = async (email, password, username) => {
 };
 
 export const loginFirebase = async (email, password) => {
-  return await auth()
-    .signInWithEmailAndPassword(email, password)
-    .then(() => {
-      return 'User exists!';
-    })
-    .catch(error => {
-      console.log(error.code);
-      if (error.code === 'auth/invalid-credential') {
-        return 'Wrong credentials';
-      }
-    });
+  try {
+    const result = await auth().signInWithEmailAndPassword(email, password);
+    return {
+      message: 'User exists!',
+      userInfo: result,
+    };
+  } catch (error) {
+    if (error.code === 'auth/invalid-credential') {
+      return 'Wrong credentials';
+    }
+  }
 };
 
 export const checkLoginStatus = () => {
