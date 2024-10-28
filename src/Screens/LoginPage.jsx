@@ -9,18 +9,15 @@ import React, {useContext, useState} from 'react';
 import InputField from '../Components/ui/InputField';
 import Button from '../Components/ui/Button';
 import {AppStateContext} from '../Context/AppStateContext/AppStateContext';
+import {AuthContext} from '../Context/AuthContext/AuthContext';
 import {loginFirebase} from '../Firebase/FirebaseAuth';
 import Loader from '../Components/ui/Loader';
 import {EmailValidation, PasswordValidation} from '../Utils/validation';
 const LoginPage = ({navigation}) => {
-  const {
-    snackBarDisplay,
-    showHideSnackBar,
-    snackBarError,
-    changeErrorMessage,
-    isLoading,
-    changeLoading,
-  } = useContext(AppStateContext);
+  const {showHideSnackBar, changeErrorMessage, isLoading, changeLoading} =
+    useContext(AppStateContext);
+
+  const {loggedin, setLoggedin} = useContext(AuthContext);
   const [loginData, setLoginData] = useState({
     Email_id: {
       name: 'Email_id',
@@ -60,15 +57,18 @@ const LoginPage = ({navigation}) => {
         loginData.Email_id.value,
         loginData.Password.value,
       );
-      if (response === 'User exists!') {
-        // setLoggedin(true);
+
+      if (response.message === 'User exists!') {
+        console.log(response.userInfo, 'response');
+        setLoginData(response.userInfo.user);
+        setLoggedin(true);
       } else if (response === 'auth/invalid-credential') {
         showErrorMessage('User does not exists');
       } else {
         showErrorMessage(response);
       }
     } catch (error) {
-      showErrorMessage('An error occurred during sign up');
+      showErrorMessage('An error occurred during Login up');
     } finally {
       changeLoading(false);
     }
@@ -112,13 +112,13 @@ const LoginPage = ({navigation}) => {
             borderColor={'#636EAB'}
             compulsory={false}
             maxLength={50}
-            paddingLeft="10%"
+            paddingLeft="5%"
             secureTextEntry={true}
           />
         </View>
 
         <Button
-          placeHolder={'Sign in'}
+          placeHolder={'Log in'}
           width={'100%'}
           backgroundColor={'#636EAB'}
           textColor={'#ffff'}

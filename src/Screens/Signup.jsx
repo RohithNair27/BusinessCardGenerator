@@ -73,7 +73,8 @@ const SignupPage = ({navigation}) => {
           modalType: 'WELCOME_MODAL',
         }); //user registration
         setLoginData(response.userInfo); // user data
-        setLoggedin(true, 'we have loggedin'); // for stacknavigation handeling
+        console.log(response.userInfo);
+        setLoggedin(true); // for stacknavigation handeling
       } else if (response === 'That email address is already in use!') {
         showErrorMessage('Account exists kindly login');
       } else {

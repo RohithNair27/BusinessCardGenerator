@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, Linking} from 'react-native';
+import {View, Text, StyleSheet, Image, Linking, Alert} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -12,11 +12,12 @@ import {getMobilePermission} from '../../Utils/Camera';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 import {AuthContext} from '../../Context/AuthContext/AuthContext';
-import InfoModal from './InfoModal';
+
 const AppDrawerItem = props => {
   const {setInfoModalVisible} = useContext(AppStateContext);
-  const {loginData} = useContext(AuthContext);
+  const {loginData, loggedin} = useContext(AuthContext);
   const supportedURL = 'http://play.google.com/store';
+
   const handlePress = async () => {
     const supported = await Linking.canOpenURL(supportedURL);
     if (supported) {
@@ -33,6 +34,13 @@ const AppDrawerItem = props => {
     });
   };
 
+  useEffect(() => {
+    if (loginData && loginData.displayName) {
+      console.log(loginData, 'Updated loginData');
+      // Perform any actions needed with the updated login data
+    }
+  }, [loginData]);
+
   return (
     <>
       <View style={styles.drawerHeader}>
@@ -47,13 +55,12 @@ const AppDrawerItem = props => {
             getMobilePermission('launchImage');
           }}>
           <Profile />
-
           <View style={styles.editbutton}>
             <MaterialIcons size={25} name={'edit'} color={'white'} />
           </View>
         </TouchableOpacity>
         <Text style={styles.drawerHeaderText}>
-          {loginData ? loginData?.displayName : 'Loading...'}
+          {loginData?.displayName || 'Loading...'}
         </Text>
         <Text
           style={{
@@ -68,31 +75,26 @@ const AppDrawerItem = props => {
       <DrawerContentScrollView>
         <DrawerItemList {...props} />
         <DrawerItem
-          icon={() => {
-            return <MaterialCommunityIcons size={24} name={'logout'} />;
-          }}
+          icon={() => <MaterialCommunityIcons size={24} name={'logout'} />}
           labelStyle={{color: 'black'}}
           label="Logout"
-          onPress={() => onPressLogout()}
+          onPress={onPressLogout}
         />
         <DrawerItem
-          icon={({focused, color}) => {
-            return (
-              <MaterialCommunityIcons
-                size={24}
-                name={'star'}
-                color={focused ? '#103550' : 'black'}
-              />
-            );
-          }}
+          icon={({focused}) => (
+            <MaterialCommunityIcons
+              size={24}
+              name={'star'}
+              color={focused ? '#103550' : 'black'}
+            />
+          )}
           labelStyle={{color: 'black'}}
           label="Rate us"
-          onPress={() => handlePress()}
+          onPress={handlePress}
         />
       </DrawerContentScrollView>
       <View style={styles.footer}>
         <Text>Version 0.0.1</Text>
-        {/* <Text></Text> */}
       </View>
     </>
   );
@@ -106,13 +108,11 @@ const styles = StyleSheet.create({
   },
   drawerHeaderText: {
     color: '#103550',
-
     fontSize: 20,
     fontWeight: 'bold',
   },
   editbutton: {
     position: 'absolute',
-    // borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     width: '40%',
@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
   footer: {
     borderColor: 'lightgray',
     position: 'absolute',
-
     bottom: 10,
     alignSelf: 'center',
   },
