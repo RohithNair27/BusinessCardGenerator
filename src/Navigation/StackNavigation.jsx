@@ -11,11 +11,18 @@ function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const {loggedin, setLoggedin, loginData, setLoginData} =
     useContext(AuthContext);
+
+  //checking if user is logged in on load
   const onLoad = async () => {
     try {
       const data = await checkLoginStatus();
-      setLoginData(data);
-      setLoggedin(true);
+      if (data !== null) {
+        console.log(data);
+        setLoginData(data);
+        setLoggedin(true);
+      } else {
+        setLoggedin(false);
+      }
     } catch (error) {
       setLoggedin(false);
     }

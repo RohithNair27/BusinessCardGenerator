@@ -34,13 +34,6 @@ const AppDrawerItem = props => {
     });
   };
 
-  useEffect(() => {
-    if (loginData && loginData.displayName) {
-      console.log(loginData, 'Updated loginData');
-      // Perform any actions needed with the updated login data
-    }
-  }, [loginData]);
-
   return (
     <>
       <View style={styles.drawerHeader}>

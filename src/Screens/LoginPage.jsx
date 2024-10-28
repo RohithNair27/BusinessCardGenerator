@@ -17,8 +17,9 @@ const LoginPage = ({navigation}) => {
   const {showHideSnackBar, changeErrorMessage, isLoading, changeLoading} =
     useContext(AppStateContext);
 
-  const {loggedin, setLoggedin} = useContext(AuthContext);
-  const [loginData, setLoginData] = useState({
+  const {loggedin, setLoggedin, loginData, setLoginData} =
+    useContext(AuthContext);
+  const [Data, setData] = useState({
     Email_id: {
       name: 'Email_id',
       value: '',
@@ -30,14 +31,14 @@ const LoginPage = ({navigation}) => {
   });
 
   const onChageText = (key, text) => {
-    setLoginData({
-      ...loginData,
-      [key]: {...loginData[key], value: text},
+    setData({
+      ...Data,
+      [key]: {...Data[key], value: text},
     });
   };
   const onPressSignUp = async () => {
-    const email = loginData?.Email_id.value.trimEnd();
-    const password = loginData?.Password.value.trimEnd();
+    const email = Data?.Email_id.value.trimEnd();
+    const password = Data?.Password.value.trimEnd();
 
     const isEmailValid = EmailValidation(email);
     const isPasswordValid = PasswordValidation(password);
@@ -54,8 +55,8 @@ const LoginPage = ({navigation}) => {
     changeLoading(true);
     try {
       let response = await loginFirebase(
-        loginData.Email_id.value,
-        loginData.Password.value,
+        Data.Email_id.value,
+        Data.Password.value,
       );
 
       if (response.message === 'User exists!') {
@@ -89,8 +90,8 @@ const LoginPage = ({navigation}) => {
         <View style={styles.eachInput}>
           <InputField
             placeholderAbove={'Email'}
-            value={loginData.Email_id.value}
-            keyProps={loginData.Email_id.name}
+            value={Data.Email_id.value}
+            keyProps={Data.Email_id.name}
             onValueChange={onChageText}
             placeHolder={'ex - youremail@gmail.com'}
             keyBoardType={'text'}
@@ -105,9 +106,9 @@ const LoginPage = ({navigation}) => {
           <InputField
             placeholderAbove={'password'}
             placeHolder={'password'}
-            value={loginData.Password.value}
+            value={Data.Password.value}
             onValueChange={onChageText}
-            keyProps={loginData.Password.name}
+            keyProps={Data.Password.name}
             keyBoardType={'text'}
             borderColor={'#636EAB'}
             compulsory={false}

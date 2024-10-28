@@ -54,7 +54,9 @@ const Home = ({navigation, route}) => {
     <Loader />
   ) : (
     <View style={styles.body}>
-      {isinfoModalVisible.visible ? <InfoModal /> : null}
+      {isinfoModalVisible.visible ? (
+        <InfoModal navigation={navigation} />
+      ) : null}
       <StatusBar backgroundColor={'#103550'} />
       <QRModal
         onClick={onPressForModal}
