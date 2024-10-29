@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {ConnectionsDataContext} from './ConnectionsContext';
 const ConnectionsDataContextProvider = ({children}) => {
   const [peopleData, setPeopleData] = useState([]);
+  const [myData, setMyData] = useState([]);
   const [userAdded, setUserAdded] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const addData = (newData, isInitialRender) => {
@@ -11,6 +12,10 @@ const ConnectionsDataContextProvider = ({children}) => {
       setPeopleData(prevData => [...prevData, newData]);
     }
   };
+
+  function AddMyPersonalData(addedData) {
+    setMyData([addedData]);
+  }
 
   const isUserAdded = () => {
     setUserAdded(!userAdded);
@@ -23,8 +28,8 @@ const ConnectionsDataContextProvider = ({children}) => {
         addData,
         userAdded,
         isUserAdded,
-        termsAgreed,
-        setTermsAgreed,
+        myData,
+        AddMyPersonalData,
       }}>
       {children}
     </ConnectionsDataContext.Provider>

@@ -12,6 +12,7 @@ import {AppStateContext} from '../../Context/AppStateContext/AppStateContext';
 import Plane from '../../Assets/Images/plane.svg';
 import {logoutPress} from '../../Firebase/FirebaseAuth';
 import {AuthContext} from '../../Context/AuthContext/AuthContext';
+import {clearAll} from '../../Utils/AsyncStorage';
 const InfoModal = ({navigation}) => {
   const {showInfoModal, isinfoModalVisible, setInfoModalVisible} =
     useContext(AppStateContext);
@@ -23,6 +24,7 @@ const InfoModal = ({navigation}) => {
   const onPressLogOut = () => {
     setLoginData({});
     handleInfoModal();
+    clearAll();
     setLoggedin(false);
     logoutPress();
   };
@@ -32,7 +34,7 @@ const InfoModal = ({navigation}) => {
       visible: false,
       modalType: '',
     });
-    navigation.navigate('New_Card', {addSelfData: true});
+    navigation.navigate('Profile');
   };
 
   const WelcomeModal = () => {
