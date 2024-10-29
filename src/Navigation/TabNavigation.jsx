@@ -40,6 +40,7 @@ const TabNavigator = () => {
       <Tab.Screen
         name="New_Card"
         component={CreateQR}
+        initialParams={{addSelfData: false}}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused}) => (

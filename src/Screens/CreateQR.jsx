@@ -11,29 +11,27 @@ import {
   isEmptyString,
   isValidPhoneNumber,
 } from '../Utils/validation';
-import {storeDataLocally} from '../Utils/AsyncStorage';
+import {
+  storeDataLocally,
+  personalData,
+  readPersonalData,
+} from '../Utils/AsyncStorage';
 import {ConnectionsDataContext} from '../Context/ConnectionsContext/ConnectionsContext';
 import {getCurrentDateFormatted} from '../Utils/CurrentDate';
 import InfoModal from '../Components/ui/InfoModal';
 import {getMobilePermission} from '../Utils/Camera';
 import {AuthContext} from '../Context/AuthContext/AuthContext';
 import {clearAll} from '../Utils/AsyncStorage';
-const CreateQR = ({navigation}) => {
+const CreateQR = ({navigation, route}) => {
   const {showHideSnackBar, changeErrorMessage, snackBarDisplay, snackBarError} =
     useContext(AppStateContext);
-  const {addData, termsAgreed, setTermsAgreed, peopleData} = useContext(
+  const {addData, peopleData, myData, AddMyPersonalData} = useContext(
     ConnectionsDataContext,
   );
-  const {
-    loggedin,
-    setLoggedin,
-    loginData,
-    setLoginData,
-    isSignIn,
-    changeSignIn,
-  } = useContext(AuthContext);
+
+  const {addSelfData} = route.params;
+  const {isSignIn} = useContext(AuthContext);
   const isFocused = useIsFocused();
-  // const [showQRcode, setshowQrCode] = useState(false);
   const [page, setPage] = useState(1);
 
   const initialState = {
@@ -90,6 +88,9 @@ const CreateQR = ({navigation}) => {
   };
   const [personData, setPersonData] = useState(initialState);
   const [qrData, setQrData] = useState();
+  const [isTermsAgreed, setTermsAgreed] = useState(false);
+
+  readPersonalData();
 
   //handle validation
   const onPressStoreDataLocal = async () => {
@@ -131,10 +132,11 @@ const CreateQR = ({navigation}) => {
       showErrorMessage(isProfessionValid.messsage);
       return;
     }
-    if (termsAgreed !== true) {
+    if (isTermsAgreed !== true && !addSelfData) {
       showErrorMessage('Kindly accept the terms');
       return;
     }
+
     const saveLocally = await storeDataLocally(email, {
       name: name,
       number: number,
@@ -142,7 +144,7 @@ const CreateQR = ({navigation}) => {
       email: email,
       city: Country,
       profession: profession,
-      terms: termsAgreed,
+      terms: isTermsAgreed,
       Time: CurrentTime,
     });
     if (saveLocally.success) {
@@ -154,13 +156,13 @@ const CreateQR = ({navigation}) => {
           email: email,
           city: Country,
           profession: profession,
-          terms: termsAgreed,
+          terms: isTermsAgreed,
           Time: CurrentTime,
         },
         false,
       );
       setPersonData(initialState);
-      navigation.navigate('Buzzcard');
+      navigation.navigate('Home');
     } else {
       showErrorMessage(saveLocally.message);
     }
@@ -180,7 +182,7 @@ const CreateQR = ({navigation}) => {
 
   //handle terms
   const handleOptionSelect = () => {
-    setTermsAgreed(!termsAgreed);
+    setTermsAgreed(!isTermsAgreed);
     navigation.navigate('Terms');
   };
 
@@ -243,9 +245,9 @@ const CreateQR = ({navigation}) => {
               </View>
             );
           })}
-        {page === 2 ? (
+        {page === 2 && !addSelfData ? (
           <>
-            <Radiobutton terms={termsAgreed} onClick={handleOptionSelect} />
+            <Radiobutton terms={isTermsAgreed} onClick={handleOptionSelect} />
           </>
         ) : null}
       </View>

@@ -1,10 +1,11 @@
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {termsAndConditions} from '../Constants/Terms&conditions';
 import Button from '../Components/ui/Button';
 import {ConnectionsDataContext} from '../Context/ConnectionsContext/ConnectionsContext';
 const TermsAndConditions = ({navigation}) => {
-  const {setTermsAgreed} = useContext(ConnectionsDataContext);
+  const [isTermsAgreed, setTermsAgreed] = useState(false);
+
   const onPressAgree = () => {
     setTermsAgreed(true);
     navigation.navigate('New_Card');
